@@ -4,6 +4,7 @@
 #include <queue>
 #include <stack>
 #include "State.h"
+#include <cstddef>
 
 class StateQueue {
 public:

@@ -1,6 +1,5 @@
 #include "algorithms/StateQueue.h"
 
-
 StateQueue::StateQueue() {}
 
 PriorityStateQueue::PriorityStateQueue() {}
