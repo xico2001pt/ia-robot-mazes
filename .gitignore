@@ -3,4 +3,5 @@
 */cmake_install.cmake
 */CMakeCache.txt
 */Makefile
-*/build
+*/build/*
+!*/build/SDL2.dll
