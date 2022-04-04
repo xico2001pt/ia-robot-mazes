@@ -16,7 +16,7 @@ std::list<State *> SearchProblemSolver::iterativeDeepeningSearch(int maxDepth) {
     std::list<State *> path;
     for (int i = 1; i <= maxDepth; ++i) {
         path = this->depthFirstSearch(i);
-        if (path.empty()) break;
+        if (!path.empty()) break;
     }
     return path;
 }

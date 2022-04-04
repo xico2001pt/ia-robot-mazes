@@ -37,11 +37,11 @@ class SearchProblemSolver:
     
     #################################
     
-    def breath_first_search(self, max_depth=9999):
-        return self.search_algorithm(max_depth, Queue())
+    def breath_first_search(self, max_depth):
+        return self.search_algorithm(max_depth, Queue(), False, False)
     
     def depth_first_search(self, max_depth):
-        return self.search_algorithm(max_depth, LifoQueue())
+        return self.search_algorithm(max_depth, LifoQueue(), False, False)
     
     def iterative_deepening_search(self, max_iterations):
         total_visited_nodes = 0
@@ -52,16 +52,16 @@ class SearchProblemSolver:
                 break
         return (path, total_visited_nodes)
 
-    def uniform_cost_search(self, max_depth=9999):
-        return self.search_algorithm(max_depth, PriorityQueue(), True)
+    def uniform_cost_search(self, max_depth):
+        return self.search_algorithm(max_depth, PriorityQueue(), True, False)
 
-    def greedy_search(self, max_depth=9999):
+    def greedy_search(self, max_depth):
         return self.search_algorithm(max_depth, PriorityQueue(), False, True)
 
-    def A_star_search(self, max_depth=9999):
+    def A_star_search(self, max_depth):
         return self.search_algorithm(max_depth, PriorityQueue(), True, True)
 
-    def search_algorithm(self, max_depth, queue, has_cost=False, has_heuristic=False):
+    def search_algorithm(self, max_depth, queue, has_cost, has_heuristic):
         """Cycles through the states according to the given data structure and operators up to a maximum depth.
 
         Parameters
