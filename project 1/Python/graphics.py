@@ -6,11 +6,10 @@ class Action:
     QUIT = 0
     ENTER = 1
     ESC = 2
-    MOUSE_DOWN = 3
-    UP = 4
-    DOWN = 5
-    LEFT = 6
-    RIGHT = 7
+    UP = 3
+    DOWN = 4
+    LEFT = 5
+    RIGHT = 6
 
 class PygameGUI:
     input_key_map = {
@@ -24,11 +23,13 @@ class PygameGUI:
     }
 
     def __init__(self, width, height):
+        pygame.init()
+        pygame.font.init()
+
         self.width = width
         self.height = height
         self.screen = pygame.display.set_mode((width, height))
-        pygame.init()
-        pygame.font.init()
+        self.font = pygame.font.SysFont("monospace", 15)
 
     def get_width(self):
         return self.width
@@ -45,14 +46,14 @@ class PygameGUI:
                 action = PygameGUI.input_key_map.get(event.key, None)
                 if action != None:
                     actions.append(action)
-            elif event.type == pygame.MOUSEBUTTONDOWN:
-                actions.append(Action.MOUSE_DOWN)
         return actions
     
     #def draw_image()
 
-    #def draw_text()
-    #def draw rectangle()
+    def draw_text(self, text, position, color):
+        label = self.font.render(text, True, color)
+        self.screen.blit(label, position.to_tuple())
+
     def draw_rectangle(self, position, width, height, color, thickness=0):
         pygame.draw.rect(
             self.screen, 
@@ -68,4 +69,5 @@ class PygameGUI:
         pygame.display.update()
 
     def close(self):
+        pygame.font.quit()
         pygame.quit()

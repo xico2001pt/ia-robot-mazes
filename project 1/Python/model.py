@@ -3,6 +3,9 @@ class Position:
         self.x = x
         self.y = y
     
+    def to_tuple(self):
+        return (self.x, self.y)
+    
     def get_up(self):
         return Position(self.x, self.y - 1)
     
@@ -16,3 +19,7 @@ class Position:
         return Position(self.x + 1, self.y)
     
     # TODO: __eq__()
+
+class MainMenu:
+    def __init__(self):
+        self.x = 0
