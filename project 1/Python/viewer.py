@@ -13,4 +13,4 @@ class Viewer:
 class MainMenuViewer(Viewer):
     def draw(self, gui):
         gui.draw_rectangle(Position(10, 10+self.model.x), 50, 50, (0, 255, 0))
-        gui.draw_text("Goodbye World!", Position(10+self.model.x, 10), (255, 0, 0))
+        gui.draw_text("Robot Mazes!", Position(10+self.model.x, 10), (255, 0, 0))
