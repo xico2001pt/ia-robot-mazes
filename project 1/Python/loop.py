@@ -18,7 +18,8 @@ class GameLoop:
             current_instant = time.time()
             elapsed_time = current_instant - last_instant
 
-            print("Frame")
+            actions = self.gui.get_actions()
+            if len(actions) > 0:    print(actions)
             self.gui.clear()
             self.gui.draw_rectangle(Position(10+x, 10), 50, 50, (0, 255, 0))
             x += 1

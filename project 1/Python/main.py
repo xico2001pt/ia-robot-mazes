@@ -1,8 +1,8 @@
 from loop import GameLoop
-from graphic import GUI
+from graphics import PygameGUI
 
 def main():
-    game_gui = GUI(500, 500)
+    game_gui = PygameGUI(500, 500)
     game_loop = GameLoop(30, game_gui)
     game_loop.run()
 
