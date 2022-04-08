@@ -27,9 +27,9 @@ class RobotMazeState(State):
         return len(self.instructions)
 
 class RobotMazeSolver(SearchProblemSolver):
-    def __init__(self, initial_state):
+    def __init__(self, initial_state, maze):
         super.__init__(initial_state)
-        # TODO: Add adjacencies matrix
+        self.maze = maze
     
     def cost(self, state):
         return len(state) - (1 if state.is_simulation_state() else 0)
@@ -43,10 +43,10 @@ class RobotMazeSolver(SearchProblemSolver):
         if (not state.is_simulation_state()):
             for instruction in ['U','D','L','R']:
                 new_instructions = instructions.copy() + [instruction]
-                if not RobotMazeState.has_cycle(new_instructions):
-                    new_states.append(new_instructions)
-        
-            new_states.append(instructions.copy() + ['E'])
+                new_states.append(new_instructions)
+
+            if not RobotMazeState.has_cycle(instructions):
+                new_states.append(instructions.copy() + ['E'])
         else: # Already ended
             return []
         return new_states
