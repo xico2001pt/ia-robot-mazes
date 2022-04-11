@@ -40,7 +40,8 @@ class LTPSolver(SearchProblemSolver):
             elif(delta_y == 0):
                 direction = 'R' if delta_x > 0 else 'L'
             else:
-                raise "TODO: this shouldn't happen"
+                # This only happens if a diagonal movement occurs, that should never happen
+                raise RuntimeError("Invalid position")
 
             turns = state.turns.copy()
             if direction != state.current_direction:
@@ -49,13 +50,12 @@ class LTPSolver(SearchProblemSolver):
         return new_states
 
     def is_final_state(self, state):
-        return state.x == 3 and state.y == 0
+        return (state.x, state.y) == self.maze.get_end_position()
 
 if __name__ == "__main__":
     from maze import Maze
-    initial_state = LTPState(0, 3)
-    maze = Maze()
-    maze.open_from_file('example_maze.txt')
+    maze = Maze('example_maze.txt')
+    initial_state = LTPState(*maze.get_start_position())
     solver = LTPSolver(initial_state, maze)
     solution = solver.breath_first_search(50)
     print('\n'.join(str(i) for i in solution[0]))
