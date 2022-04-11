@@ -54,8 +54,7 @@ class LTPSolver(SearchProblemSolver):
 if __name__ == "__main__":
     from maze import Maze
     initial_state = LTPState(0, 3)
-    maze = Maze()
-    maze.open_from_file('example_maze.txt')
+    maze = Maze('example_maze.txt')
     solver = LTPSolver(initial_state, maze)
     solution = solver.breath_first_search(50)
     print('\n'.join(str(i) for i in solution[0]))
