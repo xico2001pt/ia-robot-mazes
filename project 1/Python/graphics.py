@@ -1,5 +1,3 @@
-from multiprocessing import Event
-from tkinter import EventType
 import pygame
 
 class Action:
@@ -23,13 +21,9 @@ class PygameGUI:
     }
 
     def __init__(self, width, height):
-        pygame.init()
-        pygame.font.init()
-
         self.width = width
         self.height = height
-        self.screen = pygame.display.set_mode((width, height))
-        self.font = pygame.font.SysFont("monospace", 64)
+        self.screen = None
 
     def get_width(self):
         return self.width
@@ -84,5 +78,29 @@ class PygameGUI:
         pygame.display.update()
 
     def close(self):
+        pass
+
+    def get_surface(self):
+        return self.screen
+
+    def blit(self, surface, position=(0,0)):
+        surf = surface.get_surface()
+        self.screen.blit(surf, position)
+
+class PygameScreenGUI(PygameGUI):
+    def __init__(self, width, height):
+        super().__init__(width, height)
+        pygame.init()
+        pygame.font.init()
+        self.screen = pygame.display.set_mode((width, height))
+        self.font = pygame.font.SysFont("monospace", 64)
+
+    def close(self):
         pygame.font.quit()
         pygame.quit()
+
+class PygameSurfaceGUI(PygameGUI):
+    def __init__(self, width, height):
+        super().__init__(width, height)
+        self.font = pygame.font.SysFont("monospace", 64)
+        self.screen = pygame.Surface((width, height))

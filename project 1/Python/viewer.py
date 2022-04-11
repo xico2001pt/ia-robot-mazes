@@ -1,3 +1,4 @@
+from graphics import PygameSurfaceGUI
 from model import Position
 
 class Viewer:
@@ -15,7 +16,7 @@ class MainMenuViewer(Viewer):
         gui.draw_rectangle(Position(10, 10+self.model.x), 50, 50, (0, 255, 0))
         gui.draw_text("Robot Mazes!", Position(10+self.model.x, 10), (255, 0, 0))
 
-class GameViewer(Viewer):
+class MazeViewer(Viewer):
     def __init__(self, model):
         super().__init__(model)
         self.SQUARE_WIDTH = 150
@@ -24,8 +25,15 @@ class GameViewer(Viewer):
         self.WALL_COLOR = '#FC7753'
         self.TEXT_COLOR = '#403D58'
 
+    def get_model(self): # TODO: IS IT NECESSARY?
+        return self.model
+
+    def get_size(self):
+        size = self.model.get_size()
+        return (size[0] * self.SQUARE_WIDTH + 2, size[1] * self.SQUARE_WIDTH + 2)
+    
     def draw(self, gui):
-        adj = self.model.get_maze().get_adjacencies()
+        adj = self.model.get_adjacencies()
         lines = []
         for pos in adj:
             self.draw_block(pos[0], pos[1], gui)
@@ -63,11 +71,21 @@ class GameViewer(Viewer):
         gui.draw_rectangle(Position(x, y), self.SQUARE_WIDTH, self.SQUARE_WIDTH, self.BLOCK_BORDER_COLOR, 1) # Draw grey border
 
     def draw_start_and_end(self, gui):
-        maze = self.model.get_maze()
-        self.draw_letter_on_block(*maze.get_start_position(), 'S', gui)
-        self.draw_letter_on_block(*maze.get_end_position(), 'E', gui)
+        self.draw_letter_on_block(*self.model.get_start_position(), 'S', gui)
+        self.draw_letter_on_block(*self.model.get_end_position(), 'E', gui)
     
     def draw_letter_on_block(self, x, y, letter, gui):
         x = x * self.SQUARE_WIDTH + self.SQUARE_WIDTH/2
         y = y * self.SQUARE_WIDTH + self.SQUARE_WIDTH/2
         gui.draw_centered_text(letter, Position(x, y), self.TEXT_COLOR)
+
+class GameViewer(Viewer):
+    def __init__(self, model):
+        super().__init__(model)
+        self.maze_viewer = MazeViewer(self.model.get_maze())
+
+    def draw(self, gui):
+        surface = PygameSurfaceGUI(*self.maze_viewer.get_size())
+        self.maze_viewer.draw(surface)
+        gui.draw_rectangle(Position(0, 0), 150*5+40, 150*5+40, (255,255,255), thickness=0)
+        gui.blit(surface, (25, 25))
