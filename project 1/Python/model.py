@@ -28,6 +28,8 @@ class Game:
     def __init__(self, maze, path=[]):
         self.maze = maze
         self.path = path
+        self.current_pos = Position(*maze.get_start_position())
+        self.target_pos = Position(self.current_pos.x, self.current_pos.y) #TODO: Copy class is cleaner
 
     def get_maze(self):
         return self.maze

@@ -1,4 +1,5 @@
 from graphics import Action
+from model import Position
 
 class Controller:
     def __init__(self, model):
@@ -30,9 +31,20 @@ class GameController(Controller):
     def __init__(self, model): # TODO: Remove, it's only for debug
         super().__init__(model)
         self.model.path = [(1,4), (0,4), (0,3), (0,2), (1,2), (1,1), (1,0), (2,0), (3,0), (4,0), (4,1), (3,1)]
+        self.current_target = -1
+        self.speed = 0.05
 
     def handle_action(self, game_loop, action, elapsed_time):
         pass
     
     def step(self, game_loop, elapsed_time):
-        pass # TODO
+        if(abs(self.model.current_pos.x - self.model.target_pos.x) < 0.01 and
+            abs(self.model.current_pos.y - self.model.target_pos.y) < 0.01):
+            if(self.current_target < len(self.model.path)-1):
+                self.current_target += 1
+                self.model.target_pos = Position(*self.model.path[self.current_target])
+        else:
+            delta_x = self.model.target_pos.x-self.model.current_pos.x
+            delta_y = self.model.target_pos.y-self.model.current_pos.y
+            self.model.current_pos.x += min(self.speed*(1 if delta_x > 0 else -1), delta_x, key=abs)
+            self.model.current_pos.y += min(self.speed*(1 if delta_y > 0 else -1), delta_y, key=abs)

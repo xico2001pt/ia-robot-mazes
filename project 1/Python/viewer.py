@@ -19,7 +19,7 @@ class MainMenuViewer(Viewer):
 class MazeViewer(Viewer):
     def __init__(self, model):
         super().__init__(model)
-        self.SQUARE_WIDTH = 150
+        self.BLOCK_WIDTH = 150
         self.BLOCK_COLOR = '#F2EFEA'
         self.BLOCK_BORDER_COLOR = '#E6E6E6'
         self.WALL_COLOR = '#FC7753'
@@ -30,7 +30,7 @@ class MazeViewer(Viewer):
 
     def get_size(self):
         size = self.model.get_size()
-        return (size[0] * self.SQUARE_WIDTH + 2, size[1] * self.SQUARE_WIDTH + 2)
+        return (size[0] * self.BLOCK_WIDTH + 2, size[1] * self.BLOCK_WIDTH + 2)
     
     def draw(self, gui):
         adj = self.model.get_adjacencies()
@@ -49,16 +49,16 @@ class MazeViewer(Viewer):
         delta_x, delta_y = neighbour_pos[0] - pos[0], neighbour_pos[1] - pos[1]
         if(delta_x == 0):
             if(delta_y < 0):
-                start_position = Position(pos[0]*self.SQUARE_WIDTH, pos[1]*self.SQUARE_WIDTH)
+                start_position = Position(pos[0]*self.BLOCK_WIDTH, pos[1]*self.BLOCK_WIDTH)
             if(delta_y > 0):
-                start_position = Position(neighbour_pos[0]*self.SQUARE_WIDTH, neighbour_pos[1]*self.SQUARE_WIDTH)
-            end_position = Position(start_position.x + self.SQUARE_WIDTH, start_position.y)
+                start_position = Position(neighbour_pos[0]*self.BLOCK_WIDTH, neighbour_pos[1]*self.BLOCK_WIDTH)
+            end_position = Position(start_position.x + self.BLOCK_WIDTH, start_position.y)
         if(delta_y == 0):
             if(delta_x < 0):
-                start_position = Position(pos[0]*self.SQUARE_WIDTH, pos[1]*self.SQUARE_WIDTH)
+                start_position = Position(pos[0]*self.BLOCK_WIDTH, pos[1]*self.BLOCK_WIDTH)
             if(delta_x > 0):
-                start_position = Position(neighbour_pos[0]*self.SQUARE_WIDTH, neighbour_pos[1]*self.SQUARE_WIDTH)
-            end_position = Position(start_position.x, start_position.y + self.SQUARE_WIDTH)
+                start_position = Position(neighbour_pos[0]*self.BLOCK_WIDTH, neighbour_pos[1]*self.BLOCK_WIDTH)
+            end_position = Position(start_position.x, start_position.y + self.BLOCK_WIDTH)
         return (start_position, end_position)
 
     def draw_walls(self, lines, gui):
@@ -66,17 +66,17 @@ class MazeViewer(Viewer):
             gui.draw_line(start_pos, end_pos, self.WALL_COLOR, 6)
     
     def draw_block(self, x, y, gui):
-        x, y = x * self.SQUARE_WIDTH, y * self.SQUARE_WIDTH
-        gui.draw_rectangle(Position(x, y), self.SQUARE_WIDTH, self.SQUARE_WIDTH, self.BLOCK_COLOR) # Draw fill
-        gui.draw_rectangle(Position(x, y), self.SQUARE_WIDTH, self.SQUARE_WIDTH, self.BLOCK_BORDER_COLOR, 1) # Draw grey border
+        x, y = x * self.BLOCK_WIDTH, y * self.BLOCK_WIDTH
+        gui.draw_rectangle(Position(x, y), self.BLOCK_WIDTH, self.BLOCK_WIDTH, self.BLOCK_COLOR) # Draw fill
+        gui.draw_rectangle(Position(x, y), self.BLOCK_WIDTH, self.BLOCK_WIDTH, self.BLOCK_BORDER_COLOR, 1) # Draw grey border
 
     def draw_start_and_end(self, gui):
         self.draw_letter_on_block(*self.model.get_start_position(), 'S', gui)
         self.draw_letter_on_block(*self.model.get_end_position(), 'E', gui)
     
     def draw_letter_on_block(self, x, y, letter, gui):
-        x = x * self.SQUARE_WIDTH + self.SQUARE_WIDTH/2
-        y = y * self.SQUARE_WIDTH + self.SQUARE_WIDTH/2
+        x = x * self.BLOCK_WIDTH + self.BLOCK_WIDTH/2
+        y = y * self.BLOCK_WIDTH + self.BLOCK_WIDTH/2
         gui.draw_centered_text(letter, Position(x, y), self.TEXT_COLOR)
 
 class GameViewer(Viewer):
@@ -87,6 +87,7 @@ class GameViewer(Viewer):
         self.maze_viewer = MazeViewer(self.model.get_maze())
         self.instructions_viewer = InstructionSequenceViewer(InstructionSequence(5, ['U','D','L','R']))
         self.path_viewer = PathViewer(self.model.get_path())
+        self.character_viewer = CharacterViewer(self.model.current_pos)
     
     def get_size(self):
         maze_size = self.maze_viewer.get_size()
@@ -101,6 +102,7 @@ class GameViewer(Viewer):
         maze_surface = PygameSurfaceGUI(*self.maze_viewer.get_size())
         self.maze_viewer.draw(maze_surface)
         self.path_viewer.draw(maze_surface)
+        self.character_viewer.draw(maze_surface)
 
         instructions_surface = PygameSurfaceGUI(*self.instructions_viewer.get_size())
         self.instructions_viewer.draw(instructions_surface)
@@ -134,11 +136,22 @@ class InstructionSequenceViewer(Viewer):
 class PathViewer(Viewer):
     def __init__(self, model):
         super().__init__(model)
-        self.PATH_COLOR = '#66D7D1'
-        self.SQUARE_WIDTH = 150
+        self.PATH_COLOR = '#DBD56E'
+        self.BLOCK_WIDTH = 150
     
     def draw(self, gui):
         for i in range(len(self.model)-1):
-            start_pos = Position(self.model[i][0]*self.SQUARE_WIDTH + self.SQUARE_WIDTH/2, self.model[i][1]*self.SQUARE_WIDTH + self.SQUARE_WIDTH/2)
-            end_pos = Position(self.model[i+1][0]*self.SQUARE_WIDTH + self.SQUARE_WIDTH/2, self.model[i+1][1]*self.SQUARE_WIDTH + self.SQUARE_WIDTH/2)
+            start_pos = Position(self.model[i][0]*self.BLOCK_WIDTH + self.BLOCK_WIDTH/2, self.model[i][1]*self.BLOCK_WIDTH + self.BLOCK_WIDTH/2)
+            end_pos = Position(self.model[i+1][0]*self.BLOCK_WIDTH + self.BLOCK_WIDTH/2, self.model[i+1][1]*self.BLOCK_WIDTH + self.BLOCK_WIDTH/2)
             gui.draw_line(start_pos, end_pos, self.PATH_COLOR, 3)
+
+class CharacterViewer(Viewer):
+    def __init__(self, model):
+        super().__init__(model)
+        self.CHARACTER_COLOR = '#66D7D1'
+        self.BLOCK_WIDTH = 150
+        self.SQUARE_WIDTH = 75
+    
+    def draw(self, gui):
+        pos = Position(self.model.x*self.BLOCK_WIDTH + self.BLOCK_WIDTH/2 - self.SQUARE_WIDTH/2, self.model.y*self.BLOCK_WIDTH + self.BLOCK_WIDTH/2 - self.SQUARE_WIDTH/2)
+        gui.draw_rectangle(pos, self.SQUARE_WIDTH, self.SQUARE_WIDTH, self.CHARACTER_COLOR, 6)
