@@ -1,6 +1,7 @@
 class Maze:
-    def __init__(self):
+    def __init__(self, filename):
         self.adjacencies = {}
+        self.open_from_file(filename)
     
     def open_from_file(self, filename):
         with open(filename, 'r') as file:
@@ -24,3 +25,15 @@ class Maze:
                         k, q = i + offset_y*2, j + offset_x*2
                         if(k >= 0 and k < 2*board_height-1 and q >= 0 and q < 2*board_width-1 and layout_list[wall_y][wall_x] == ' '):
                             self.adjacencies[(x,y)].append((q // 2, k // 2))
+
+    def get_adjacencies(self):
+        return self.adjacencies
+
+    def get_start_position(self):
+        return self.start_position
+
+    def get_end_position(self):
+        return self.end_position
+
+    def get_size(self):
+        return self.size
