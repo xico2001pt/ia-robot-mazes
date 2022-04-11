@@ -86,6 +86,7 @@ class GameViewer(Viewer):
         self.OFFSET_Y = 25
         self.maze_viewer = MazeViewer(self.model.get_maze())
         self.instructions_viewer = InstructionSequenceViewer(InstructionSequence(5, ['U','D','L','R']))
+        self.path_viewer = PathViewer(self.model.get_path())
     
     def get_size(self):
         maze_size = self.maze_viewer.get_size()
@@ -99,6 +100,7 @@ class GameViewer(Viewer):
 
         maze_surface = PygameSurfaceGUI(*self.maze_viewer.get_size())
         self.maze_viewer.draw(maze_surface)
+        self.path_viewer.draw(maze_surface)
 
         instructions_surface = PygameSurfaceGUI(*self.instructions_viewer.get_size())
         self.instructions_viewer.draw(instructions_surface)
@@ -128,3 +130,15 @@ class InstructionSequenceViewer(Viewer):
                 pos = Position(self.INSTRUCTION_WIDTH*i + self.INSTRUCTION_WIDTH/2, self.INSTRUCTION_WIDTH/2)
                 gui.draw_centered_text(sequence[i], pos, self.TEXT_COLOR)
             gui.draw_rectangle(Position(self.INSTRUCTION_WIDTH*i, 0), size*self.INSTRUCTION_WIDTH, self.INSTRUCTION_WIDTH, self.BORDER_COLOR, 5)
+
+class PathViewer(Viewer):
+    def __init__(self, model):
+        super().__init__(model)
+        self.PATH_COLOR = '#66D7D1'
+        self.SQUARE_WIDTH = 150
+    
+    def draw(self, gui):
+        for i in range(len(self.model)-1):
+            start_pos = Position(self.model[i][0]*self.SQUARE_WIDTH + self.SQUARE_WIDTH/2, self.model[i][1]*self.SQUARE_WIDTH + self.SQUARE_WIDTH/2)
+            end_pos = Position(self.model[i+1][0]*self.SQUARE_WIDTH + self.SQUARE_WIDTH/2, self.model[i+1][1]*self.SQUARE_WIDTH + self.SQUARE_WIDTH/2)
+            gui.draw_line(start_pos, end_pos, self.PATH_COLOR, 3)

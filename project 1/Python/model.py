@@ -25,11 +25,15 @@ class MainMenu:
         self.x = 0
     
 class Game:
-    def __init__(self, maze):
+    def __init__(self, maze, path=[]):
         self.maze = maze
+        self.path = path
 
     def get_maze(self):
         return self.maze
+    
+    def get_path(self):
+        return self.path
 
 class InstructionSequence:
     def __init__(self, size, sequence=[]):

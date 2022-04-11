@@ -27,6 +27,10 @@ class MainMenuController(Controller):
         self.model.x += 1
 
 class GameController(Controller):
+    def __init__(self, model): # TODO: Remove, it's only for debug
+        super().__init__(model)
+        self.model.path = [(1,4), (0,4), (0,3), (0,2), (1,2), (1,1), (1,0), (2,0), (3,0), (4,0), (4,1), (3,1)]
+
     def handle_action(self, game_loop, action, elapsed_time):
         pass
     
