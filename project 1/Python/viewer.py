@@ -64,9 +64,10 @@ class GameViewer(Viewer):
 
     def draw_start_and_end(self, gui):
         maze = self.model.get_maze()
-        start_pos = maze.get_start_position()
-        font_pos = Position(start_pos[0] * self.SQUARE_WIDTH + self.SQUARE_WIDTH/2, start_pos[1] * self.SQUARE_WIDTH  + self.SQUARE_WIDTH/2)
-        gui.draw_centered_text('S', font_pos, self.TEXT_COLOR)
-        end_pos = maze.get_end_position()
-        font_pos = Position(end_pos[0] * self.SQUARE_WIDTH + self.SQUARE_WIDTH/2, end_pos[1] * self.SQUARE_WIDTH  + self.SQUARE_WIDTH/2)
-        gui.draw_centered_text('E', font_pos, self.TEXT_COLOR)
+        self.draw_letter_on_block(*maze.get_start_position(), 'S', gui)
+        self.draw_letter_on_block(*maze.get_end_position(), 'E', gui)
+    
+    def draw_letter_on_block(self, x, y, letter, gui):
+        x = x * self.SQUARE_WIDTH + self.SQUARE_WIDTH/2
+        y = y * self.SQUARE_WIDTH + self.SQUARE_WIDTH/2
+        gui.draw_centered_text(letter, Position(x, y), self.TEXT_COLOR)
