@@ -29,7 +29,7 @@ class PygameGUI:
         self.width = width
         self.height = height
         self.screen = pygame.display.set_mode((width, height))
-        self.font = pygame.font.SysFont("monospace", 15)
+        self.font = pygame.font.SysFont("monospace", 64)
 
     def get_width(self):
         return self.width
@@ -53,6 +53,21 @@ class PygameGUI:
     def draw_text(self, text, position, color):
         label = self.font.render(text, True, color)
         self.screen.blit(label, position.to_tuple())
+    
+    def draw_centered_text(self, text, position, color):
+        width, height = self.font.size(text)
+        label = self.font.render(text, True, color)
+        correct_position = (position.x - width/2, position.y - height/2)
+        self.screen.blit(label, correct_position)
+
+    def draw_line(self, start_position, end_position, color, thickness=1):
+        pygame.draw.line(
+            self.screen,
+            color,
+            (start_position.x, start_position.y),
+            (end_position.x, end_position.y),
+            width=thickness
+        )
 
     def draw_rectangle(self, position, width, height, color, thickness=0):
         pygame.draw.rect(
