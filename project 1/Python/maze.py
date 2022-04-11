@@ -37,3 +37,6 @@ class Maze:
 
     def get_size(self):
         return self.size
+
+    def connected(self, first, second):
+        return second in self.adjacencies[first]
