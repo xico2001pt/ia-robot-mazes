@@ -1,5 +1,5 @@
 from graphics import PygameSurfaceGUI
-from model import Position
+from model import InstructionSequence, Position
 
 class Viewer:
     def __init__(self, model):
@@ -82,10 +82,49 @@ class MazeViewer(Viewer):
 class GameViewer(Viewer):
     def __init__(self, model):
         super().__init__(model)
+        self.OFFSET_X = 25
+        self.OFFSET_Y = 25
         self.maze_viewer = MazeViewer(self.model.get_maze())
+        self.instructions_viewer = InstructionSequenceViewer(InstructionSequence(5, ['U','D','L','R']))
+    
+    def get_size(self):
+        maze_size = self.maze_viewer.get_size()
+        instruction_size = self.instructions_viewer.get_size()
+        return (max(maze_size[0],instruction_size[0])+self.OFFSET_X*2,
+            maze_size[1]+instruction_size[1]+self.OFFSET_Y*3)
 
     def draw(self, gui):
-        surface = PygameSurfaceGUI(*self.maze_viewer.get_size())
-        self.maze_viewer.draw(surface)
-        gui.draw_rectangle(Position(0, 0), 150*5+40, 150*5+40, (255,255,255), thickness=0)
-        gui.blit(surface, (25, 25))
+        size = self.get_size()
+        gui.draw_rectangle(Position(0, 0), size[0], size[1], (255,255,255), thickness=0)
+
+        maze_surface = PygameSurfaceGUI(*self.maze_viewer.get_size())
+        self.maze_viewer.draw(maze_surface)
+
+        instructions_surface = PygameSurfaceGUI(*self.instructions_viewer.get_size())
+        self.instructions_viewer.draw(instructions_surface)
+        
+        gui.blit(maze_surface, (self.OFFSET_X, self.OFFSET_Y))
+        gui.blit(instructions_surface, (self.OFFSET_X, self.OFFSET_Y*2 + self.maze_viewer.get_size()[1]))
+
+class InstructionSequenceViewer(Viewer):
+    def __init__(self, model):
+        super().__init__(model)
+        self.INSTRUCTION_WIDTH = 100
+        self.BACKGROUND_COLOR = '#F2EFEA'
+        self.TEXT_COLOR = '#403D58'
+        self.BORDER_COLOR = '#FC7753'
+
+    def get_size(self):
+        size = self.model.get_size()
+        return (size*self.INSTRUCTION_WIDTH, self.INSTRUCTION_WIDTH)
+
+    def draw(self, gui):
+        size = self.model.get_size()
+        gui.draw_rectangle(Position(0, 0), size*self.INSTRUCTION_WIDTH, self.INSTRUCTION_WIDTH, self.BACKGROUND_COLOR)
+
+        sequence = self.model.get_sequence()
+        for i in range(self.model.get_size()):
+            if(i < len(sequence)):
+                pos = Position(self.INSTRUCTION_WIDTH*i + self.INSTRUCTION_WIDTH/2, self.INSTRUCTION_WIDTH/2)
+                gui.draw_centered_text(sequence[i], pos, self.TEXT_COLOR)
+            gui.draw_rectangle(Position(self.INSTRUCTION_WIDTH*i, 0), size*self.INSTRUCTION_WIDTH, self.INSTRUCTION_WIDTH, self.BORDER_COLOR, 5)

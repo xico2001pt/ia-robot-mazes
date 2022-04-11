@@ -30,3 +30,18 @@ class Game:
 
     def get_maze(self):
         return self.maze
+
+class InstructionSequence:
+    def __init__(self, size, sequence=[]):
+        self.sequence = sequence
+        self.size = size
+    
+    def get_sequence(self):
+        return self.sequence
+    
+    def get_size(self):
+        return self.size
+    
+    def add_instruction(self, instruction):
+        if len(self.sequence < self.size):
+            self.sequence.append(instruction)
