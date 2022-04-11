@@ -25,3 +25,10 @@ class MainMenuController(Controller):
     
     def step(self, game_loop, elapsed_time):
         self.model.x += 1
+
+class GameController(Controller):
+    def handle_action(self, game_loop, action, elapsed_time):
+        pass
+    
+    def step(self, game_loop, elapsed_time):
+        pass # TODO

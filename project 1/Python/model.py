@@ -23,3 +23,10 @@ class Position:
 class MainMenu:
     def __init__(self):
         self.x = 0
+    
+class Game:
+    def __init__(self, maze):
+        self.maze = maze
+
+    def get_maze(self):
+        return self.maze

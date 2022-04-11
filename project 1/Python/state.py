@@ -1,6 +1,5 @@
-from numbers import Integral
-from controller import MainMenuController
-from viewer import MainMenuViewer
+from controller import GameController, MainMenuController
+from viewer import GameViewer, MainMenuViewer
 
 class State:
     def __init__(self, model, controller, viewer):
@@ -23,3 +22,7 @@ class State:
 class MainMenuState(State):
     def __init__(self, main_menu):
         super().__init__(main_menu, MainMenuController(main_menu), MainMenuViewer(main_menu))
+
+class GameState(State):
+    def __init__(self, model):
+        super().__init__(model, GameController(model), GameViewer(model))
