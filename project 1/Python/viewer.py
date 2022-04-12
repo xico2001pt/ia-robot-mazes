@@ -1,5 +1,6 @@
 from graphics import PygameSurfaceGUI
 from model import InstructionSequence, Position
+import graphics_consts as consts
 
 class Viewer:
     def __init__(self, model):
@@ -19,18 +20,13 @@ class MainMenuViewer(Viewer):
 class MazeViewer(Viewer):
     def __init__(self, model):
         super().__init__(model)
-        self.BLOCK_WIDTH = 150
-        self.BLOCK_COLOR = '#F2EFEA'
-        self.BLOCK_BORDER_COLOR = '#E6E6E6'
-        self.WALL_COLOR = '#FC7753'
-        self.TEXT_COLOR = '#403D58'
 
     def get_model(self): # TODO: IS IT NECESSARY?
         return self.model
 
     def get_size(self):
         size = self.model.get_size()
-        return (size[0] * self.BLOCK_WIDTH + 2, size[1] * self.BLOCK_WIDTH + 2)
+        return (size[0] * consts.BLOCK_WIDTH + 2, size[1] * consts.BLOCK_WIDTH + 2)
     
     def draw(self, gui):
         adj = self.model.get_adjacencies()
@@ -49,35 +45,35 @@ class MazeViewer(Viewer):
         delta_x, delta_y = neighbour_pos[0] - pos[0], neighbour_pos[1] - pos[1]
         if(delta_x == 0):
             if(delta_y < 0):
-                start_position = Position(pos[0]*self.BLOCK_WIDTH, pos[1]*self.BLOCK_WIDTH)
+                start_position = Position(pos[0]*consts.BLOCK_WIDTH, pos[1]*consts.BLOCK_WIDTH)
             if(delta_y > 0):
-                start_position = Position(neighbour_pos[0]*self.BLOCK_WIDTH, neighbour_pos[1]*self.BLOCK_WIDTH)
-            end_position = Position(start_position.x + self.BLOCK_WIDTH, start_position.y)
+                start_position = Position(neighbour_pos[0]*consts.BLOCK_WIDTH, neighbour_pos[1]*consts.BLOCK_WIDTH)
+            end_position = Position(start_position.x + consts.BLOCK_WIDTH, start_position.y)
         if(delta_y == 0):
             if(delta_x < 0):
-                start_position = Position(pos[0]*self.BLOCK_WIDTH, pos[1]*self.BLOCK_WIDTH)
+                start_position = Position(pos[0]*consts.BLOCK_WIDTH, pos[1]*consts.BLOCK_WIDTH)
             if(delta_x > 0):
-                start_position = Position(neighbour_pos[0]*self.BLOCK_WIDTH, neighbour_pos[1]*self.BLOCK_WIDTH)
-            end_position = Position(start_position.x, start_position.y + self.BLOCK_WIDTH)
+                start_position = Position(neighbour_pos[0]*consts.BLOCK_WIDTH, neighbour_pos[1]*consts.BLOCK_WIDTH)
+            end_position = Position(start_position.x, start_position.y + consts.BLOCK_WIDTH)
         return (start_position, end_position)
 
     def draw_walls(self, lines, gui):
         for start_pos, end_pos in lines:
-            gui.draw_line(start_pos, end_pos, self.WALL_COLOR, 6)
+            gui.draw_line(start_pos, end_pos, consts.WALL_COLOR, 6)
     
     def draw_block(self, x, y, gui):
-        x, y = x * self.BLOCK_WIDTH, y * self.BLOCK_WIDTH
-        gui.draw_rectangle(Position(x, y), self.BLOCK_WIDTH, self.BLOCK_WIDTH, self.BLOCK_COLOR) # Draw fill
-        gui.draw_rectangle(Position(x, y), self.BLOCK_WIDTH, self.BLOCK_WIDTH, self.BLOCK_BORDER_COLOR, 1) # Draw grey border
+        x, y = x * consts.BLOCK_WIDTH, y * consts.BLOCK_WIDTH
+        gui.draw_rectangle(Position(x, y), consts.BLOCK_WIDTH, consts.BLOCK_WIDTH, consts.BLOCK_COLOR) # Draw fill
+        gui.draw_rectangle(Position(x, y), consts.BLOCK_WIDTH, consts.BLOCK_WIDTH, consts.BORDER_COLOR, 1) # Draw grey border
 
     def draw_start_and_end(self, gui):
         self.draw_letter_on_block(*self.model.get_start_position(), 'S', gui)
         self.draw_letter_on_block(*self.model.get_end_position(), 'E', gui)
     
     def draw_letter_on_block(self, x, y, letter, gui):
-        x = x * self.BLOCK_WIDTH + self.BLOCK_WIDTH/2
-        y = y * self.BLOCK_WIDTH + self.BLOCK_WIDTH/2
-        gui.draw_centered_text(letter, Position(x, y), self.TEXT_COLOR)
+        x = x * consts.BLOCK_WIDTH + consts.BLOCK_WIDTH/2
+        y = y * consts.BLOCK_WIDTH + consts.BLOCK_WIDTH/2
+        gui.draw_centered_text(letter, Position(x, y), consts.TEXT_COLOR)
 
 class GameViewer(Viewer):
     def __init__(self, model):
@@ -113,45 +109,36 @@ class GameViewer(Viewer):
 class InstructionSequenceViewer(Viewer):
     def __init__(self, model):
         super().__init__(model)
-        self.INSTRUCTION_WIDTH = 100
-        self.BACKGROUND_COLOR = '#F2EFEA'
-        self.TEXT_COLOR = '#403D58'
-        self.BORDER_COLOR = '#FC7753'
 
     def get_size(self):
         size = self.model.get_size()
-        return (size*self.INSTRUCTION_WIDTH, self.INSTRUCTION_WIDTH)
+        return (size*consts.INSTRUCTION_WIDTH, consts.INSTRUCTION_WIDTH)
 
     def draw(self, gui):
         size = self.model.get_size()
-        gui.draw_rectangle(Position(0, 0), size*self.INSTRUCTION_WIDTH, self.INSTRUCTION_WIDTH, self.BACKGROUND_COLOR)
+        gui.draw_rectangle(Position(0, 0), size*consts.INSTRUCTION_WIDTH, consts.INSTRUCTION_WIDTH, consts.BLOCK_COLOR)
 
         sequence = self.model.get_sequence()
         for i in range(self.model.get_size()):
             if(i < len(sequence)):
-                pos = Position(self.INSTRUCTION_WIDTH*i + self.INSTRUCTION_WIDTH/2, self.INSTRUCTION_WIDTH/2)
-                gui.draw_centered_text(sequence[i], pos, self.TEXT_COLOR)
-            gui.draw_rectangle(Position(self.INSTRUCTION_WIDTH*i, 0), size*self.INSTRUCTION_WIDTH, self.INSTRUCTION_WIDTH, self.BORDER_COLOR, 5)
+                pos = Position(consts.INSTRUCTION_WIDTH*i + consts.INSTRUCTION_WIDTH/2, consts.INSTRUCTION_WIDTH/2)
+                gui.draw_centered_text(sequence[i], pos, consts.TEXT_COLOR)
+            gui.draw_rectangle(Position(consts.INSTRUCTION_WIDTH*i, 0), size*consts.INSTRUCTION_WIDTH, consts.INSTRUCTION_WIDTH, consts.WALL_COLOR, 5)
 
 class PathViewer(Viewer):
     def __init__(self, model):
         super().__init__(model)
-        self.PATH_COLOR = '#DBD56E'
-        self.BLOCK_WIDTH = 150
     
     def draw(self, gui):
         for i in range(len(self.model)-1):
-            start_pos = Position(self.model[i][0]*self.BLOCK_WIDTH + self.BLOCK_WIDTH/2, self.model[i][1]*self.BLOCK_WIDTH + self.BLOCK_WIDTH/2)
-            end_pos = Position(self.model[i+1][0]*self.BLOCK_WIDTH + self.BLOCK_WIDTH/2, self.model[i+1][1]*self.BLOCK_WIDTH + self.BLOCK_WIDTH/2)
-            gui.draw_line(start_pos, end_pos, self.PATH_COLOR, 3)
+            start_pos = Position(self.model[i][0]*consts.BLOCK_WIDTH + consts.BLOCK_WIDTH/2, self.model[i][1]*consts.BLOCK_WIDTH + consts.BLOCK_WIDTH/2)
+            end_pos = Position(self.model[i+1][0]*consts.BLOCK_WIDTH + consts.BLOCK_WIDTH/2, self.model[i+1][1]*consts.BLOCK_WIDTH + consts.BLOCK_WIDTH/2)
+            gui.draw_line(start_pos, end_pos, consts.PATH_COLOR, 3)
 
 class CharacterViewer(Viewer):
     def __init__(self, model):
         super().__init__(model)
-        self.CHARACTER_COLOR = '#66D7D1'
-        self.BLOCK_WIDTH = 150
-        self.SQUARE_WIDTH = 75
     
     def draw(self, gui):
-        pos = Position(self.model.x*self.BLOCK_WIDTH + self.BLOCK_WIDTH/2 - self.SQUARE_WIDTH/2, self.model.y*self.BLOCK_WIDTH + self.BLOCK_WIDTH/2 - self.SQUARE_WIDTH/2)
-        gui.draw_rectangle(pos, self.SQUARE_WIDTH, self.SQUARE_WIDTH, self.CHARACTER_COLOR, 6)
+        pos = Position(self.model.x*consts.BLOCK_WIDTH + consts.BLOCK_WIDTH/2 - consts.CHARACTER_WIDTH/2, self.model.y*consts.BLOCK_WIDTH + consts.BLOCK_WIDTH/2 - consts.CHARACTER_WIDTH/2)
+        gui.draw_rectangle(pos, consts.CHARACTER_WIDTH, consts.CHARACTER_WIDTH, consts.CHARACTER_COLOR, 6)
