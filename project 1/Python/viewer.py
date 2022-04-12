@@ -81,7 +81,7 @@ class GameViewer(Viewer):
         self.OFFSET_X = 25
         self.OFFSET_Y = 25
         self.maze_viewer = MazeViewer(self.model.get_maze())
-        self.instructions_viewer = InstructionSequenceViewer(InstructionSequence(5, ['U','D','L','R']))
+        self.instructions_viewer = InstructionSequenceViewer(self.model.get_sequence())
         self.path_viewer = PathViewer(self.model.get_path())
         self.character_viewer = CharacterViewer(self.model.current_pos)
     
@@ -131,9 +131,15 @@ class PathViewer(Viewer):
     
     def draw(self, gui):
         for i in range(len(self.model)-1):
-            start_pos = Position(self.model[i][0]*consts.BLOCK_WIDTH + consts.BLOCK_WIDTH/2, self.model[i][1]*consts.BLOCK_WIDTH + consts.BLOCK_WIDTH/2)
-            end_pos = Position(self.model[i+1][0]*consts.BLOCK_WIDTH + consts.BLOCK_WIDTH/2, self.model[i+1][1]*consts.BLOCK_WIDTH + consts.BLOCK_WIDTH/2)
-            gui.draw_line(start_pos, end_pos, consts.PATH_COLOR, 3)
+            if(self.model[i] not in ['U','D','L','R']):
+                start_pos = Position(self.model[i][0]*consts.BLOCK_WIDTH + consts.BLOCK_WIDTH/2, self.model[i][1]*consts.BLOCK_WIDTH + consts.BLOCK_WIDTH/2)
+                j = 1
+                while(i+j < len(self.model) and self.model[i+j] in ['U','D','L','R']):
+                    j += 1
+
+                if(i+j < len(self.model)):
+                    end_pos = Position(self.model[i+j][0]*consts.BLOCK_WIDTH + consts.BLOCK_WIDTH/2, self.model[i+j][1]*consts.BLOCK_WIDTH + consts.BLOCK_WIDTH/2)
+                    gui.draw_line(start_pos, end_pos, consts.PATH_COLOR, 3)
 
 class CharacterViewer(Viewer):
     def __init__(self, model):

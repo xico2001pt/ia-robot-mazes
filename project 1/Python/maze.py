@@ -9,7 +9,8 @@ class Maze:
             self.size = tuple(int(i) for i in lines[0].split(' ')[1:])
             self.start_position = tuple(int(i) for i in lines[1].split(' ')[1:])
             self.end_position = tuple(int(i) for i in lines[2].split(' ')[1:])
-            self.read_layout(lines[3:])
+            self.minimum_instructions = int(lines[3].split(' ')[1])
+            self.read_layout(lines[4:])
 
     def read_layout(self, lines):
         layout_list = [[i for i in line] for line in lines]
