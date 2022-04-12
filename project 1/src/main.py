@@ -6,7 +6,7 @@ from viewer import GameViewer
 
 def main():
     from maze import Maze
-    m = Maze("example_maze.txt")
+    m = Maze("../assets/mazes/maze10.txt")
 
     game_gui = PygameScreenGUI(*GameViewer(Game(m)).get_size()) #TODO: This is absolutely stupid
     #game_loop = GameLoop(30, game_gui, MainMenuState(MainMenu()))
