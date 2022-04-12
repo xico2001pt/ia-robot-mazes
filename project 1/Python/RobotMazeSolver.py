@@ -28,7 +28,7 @@ class RobotMazeState(State):
 
 class RobotMazeSolver(SearchProblemSolver):
     def __init__(self, initial_state, maze):
-        super.__init__(initial_state)
+        super().__init__(initial_state)
         self.maze = maze
     
     def cost(self, state):
@@ -52,5 +52,23 @@ class RobotMazeSolver(SearchProblemSolver):
         return new_states
     
     def is_final_state(self, state):
-        # TODO: Simulate and check if reaches end
-        raise NotImplementedError()
+        visited = set()
+        position = self.maze.start_position
+        endPosition = self.maze.end_position
+        while (position not in visited) and (position != endPosition):
+            # Add current position to the visited set
+            visited.add(position)
+            for instruction in state.get_instructions():
+                # Obtain next position
+                if instruction == 'U':               
+                    nextPosition = (position[0], position[1] - 1)
+                elif instruction == 'D':
+                    nextPosition = (position[0], position[1] + 1)
+                elif instruction == 'L':
+                    nextPosition = (position[0] - 1, position[1])
+                elif instruction == 'R':
+                    nextPosition = (position[0] + 1, position[1])
+                # Check if nextPosition is obtainable
+                if self.maze.connected(position, nextPosition):
+                    position = nextPosition
+        return position == endPosition
