@@ -22,7 +22,8 @@ class PygameGUI:
         pygame.K_LEFT: Action.LEFT,
         pygame.K_a: Action.LEFT,
         pygame.K_RIGHT: Action.RIGHT,
-        pygame.K_d: Action.RIGHT
+        pygame.K_d: Action.RIGHT,
+        pygame.K_q: Action.QUIT
     }
 
     def __init__(self, width, height):
