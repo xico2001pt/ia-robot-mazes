@@ -68,6 +68,10 @@ class RobotMazeSolver(SearchProblemSolver):
                     nextPosition = (position[0] - 1, position[1])
                 elif instruction == 'R':
                     nextPosition = (position[0] + 1, position[1])
+                
+                if position == endPosition:
+                    return True
+
                 # Check if nextPosition is obtainable
                 if self.maze.connected(position, nextPosition):
                     position = nextPosition
