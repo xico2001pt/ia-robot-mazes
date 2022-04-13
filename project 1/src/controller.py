@@ -6,7 +6,10 @@ class Controller:
         self.model = model
     
     def update(self, game_loop, actions, elapsed_time):
-        for action in actions: # TODO: QUIT SHOULD BE HANDLED HERE, BECAUSE IT DOES THE SAME THING EVERYTIME
+        for action in actions:
+            if action == Action.QUIT:
+                game_loop.stop()
+                return
             self.handle_action(game_loop, action, elapsed_time)
         self.step(game_loop, elapsed_time)
 
@@ -18,10 +21,7 @@ class Controller:
 
 class MainMenuController(Controller):
     def handle_action(self, game_loop, action, elapsed_time):
-        if action == Action.QUIT:
-            print("Bye")
-            game_loop.stop()
-        elif action == Action.ENTER:
+        if action == Action.ENTER:
             self.model.x = 0
     
     def step(self, game_loop, elapsed_time):
@@ -51,8 +51,10 @@ class GameController(Controller):
             if action == Action.ENTER and self.model.sequence.full():
                 self.calculate_path()
                 self.running = True
-            if action in [Action.UP,Action.DOWN,Action.LEFT,Action.RIGHT] and not self.model.sequence.full():
+            elif action in [Action.UP,Action.DOWN,Action.LEFT,Action.RIGHT]:
                 self.model.add_instruction(self.actions[action])
+            elif action == Action.BACKSPACE:
+                self.model.pop_instruction()
     
     def step(self, game_loop, elapsed_time):
         if(abs(self.model.current_pos.x - self.model.target_pos.x) < 0.01 and

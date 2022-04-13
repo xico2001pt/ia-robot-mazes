@@ -41,6 +41,10 @@ class InstructionSequence:
     def add_instruction(self, instruction):
         if len(self.sequence) < self.size:
             self.sequence.append(instruction)
+    
+    def pop_instruction(self):
+        if len(self.sequence) > 0:
+            self.sequence.pop()
 
     
 class Game:
@@ -63,3 +67,6 @@ class Game:
     
     def add_instruction(self, instruction):
         self.sequence.add_instruction(instruction)
+    
+    def pop_instruction(self):
+        self.sequence.pop_instruction()

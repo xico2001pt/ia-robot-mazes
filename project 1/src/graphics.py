@@ -3,21 +3,26 @@ import pygame
 class Action:
     QUIT = 0
     ENTER = 1
-    ESC = 2
-    UP = 3
-    DOWN = 4
-    LEFT = 5
-    RIGHT = 6
+    BACKSPACE = 2
+    ESC = 3
+    UP = 4
+    DOWN = 5
+    LEFT = 6
+    RIGHT = 7
 
 class PygameGUI:
     input_key_map = {
         pygame.K_RETURN: Action.ENTER,
+        pygame.K_BACKSPACE: Action.BACKSPACE,
         pygame.K_ESCAPE: Action.ESC,
         pygame.K_UP: Action.UP,
+        pygame.K_w: Action.UP,
         pygame.K_DOWN: Action.DOWN,
+        pygame.K_s: Action.DOWN,
         pygame.K_LEFT: Action.LEFT,
-        pygame.K_RIGHT: Action.RIGHT
-        # TODO: ADD WASD?
+        pygame.K_a: Action.LEFT,
+        pygame.K_RIGHT: Action.RIGHT,
+        pygame.K_d: Action.RIGHT
     }
 
     def __init__(self, width, height):
@@ -42,7 +47,7 @@ class PygameGUI:
                     actions.append(action)
         return actions
     
-    #def draw_image()
+    #def draw_image() # TODO?
 
     def draw_text(self, text, position, color):
         label = self.font.render(text, True, color)

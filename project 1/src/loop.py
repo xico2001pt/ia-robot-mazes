@@ -22,7 +22,7 @@ class GameLoop:
 
             last_instant = current_instant
             time.sleep(max(0, seconds_per_frame + current_instant - time.time()))
-        self.gui.close()
+        self.gui.close() # TODO: Maybe this should not be here
 
 
     def stop(self):
