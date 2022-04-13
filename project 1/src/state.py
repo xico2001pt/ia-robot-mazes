@@ -1,4 +1,4 @@
-from controller import GameController, MainMenuController
+from controller import HumanGameController, AIGameController, MainMenuController
 from viewer import GameViewer, MainMenuViewer
 
 class State:
@@ -25,4 +25,4 @@ class MainMenuState(State):
 
 class GameState(State):
     def __init__(self, model):
-        super().__init__(model, GameController(model), GameViewer(model))
+        super().__init__(model, AIGameController(model), GameViewer(model))

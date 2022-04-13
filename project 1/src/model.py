@@ -45,8 +45,12 @@ class InstructionSequence:
     def pop_instruction(self):
         if len(self.sequence) > 0:
             self.sequence.pop()
-
     
+    def set_instructions(self, instructions):
+        self.sequence = instructions.copy()
+        self.size = len(self.sequence)
+
+
 class Game:
     def __init__(self, maze, path=[]):
         self.maze = maze
@@ -67,6 +71,9 @@ class Game:
     
     def add_instruction(self, instruction):
         self.sequence.add_instruction(instruction)
+    
+    def set_instructions(self, instructions):
+        self.sequence.set_instructions(instructions)
     
     def pop_instruction(self):
         self.sequence.pop_instruction()

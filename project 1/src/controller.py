@@ -1,5 +1,6 @@
 from graphics import Action
 from model import Position
+from RobotMazeSolver import RobotMazeSolver, RobotMazeState
 
 class Controller:
     def __init__(self, model):
@@ -34,27 +35,15 @@ class GameController(Controller):
         'R': (1,0),
         'L': (-1,0)
     }
-    actions = {
-        Action.UP: 'U',
-        Action.DOWN: 'D',
-        Action.LEFT: 'L',
-        Action.RIGHT: 'R'
-    }
 
     def __init__(self, model):
         super().__init__(model)
         self.speed = 0.05
         self.running = False
+        self.solver = RobotMazeSolver(RobotMazeState([]), self.model.get_maze())
 
     def handle_action(self, game_loop, action, elapsed_time):
-        if not self.running:
-            if action == Action.ENTER and self.model.sequence.full():
-                self.calculate_path()
-                self.running = True
-            elif action in [Action.UP,Action.DOWN,Action.LEFT,Action.RIGHT]:
-                self.model.add_instruction(self.actions[action])
-            elif action == Action.BACKSPACE:
-                self.model.pop_instruction()
+        raise NotImplementedError("GameController is an abstract class")
     
     def step(self, game_loop, elapsed_time):
         if(abs(self.model.current_pos.x - self.model.target_pos.x) < 0.01 and
@@ -102,3 +91,46 @@ class GameController(Controller):
                     self.model.path += [instruction]
         if(self.model.path[-1] in ['U','D','L','R']):
             self.model.path += [position]
+
+class HumanGameController(GameController):
+    actions = {
+        Action.UP: 'U',
+        Action.DOWN: 'D',
+        Action.LEFT: 'L',
+        Action.RIGHT: 'R'
+    }
+
+    def __init__(self, model):
+        super().__init__(model)
+
+    def handle_action(self, game_loop, action, elapsed_time):
+        if not self.running:
+            if action == Action.ENTER and self.model.sequence.full():
+                self.calculate_path()
+                self.running = True
+            elif action in [Action.UP,Action.DOWN,Action.LEFT,Action.RIGHT]:
+                self.model.add_instruction(self.actions[action])
+            elif action == Action.BACKSPACE:
+                self.model.pop_instruction()
+    
+class AIGameController(GameController):
+    def __init__(self, model, algorithm='bfs', max_depth=15):
+        super().__init__(model)
+        algorithms = {
+            'bfs': self.solver.breath_first_search,
+            'dfs': self.solver.depth_first_search,
+            'ids': self.solver.iterative_deepening_search,
+            'astar': self.solver.A_star_search,
+            'greedy': self.solver.greedy_search
+        }
+        self.algorithm = algorithms[algorithm]
+        self.max_depth = max_depth
+    
+    def handle_action(self, game_loop, action, elapsed_time):
+        if not self.running:
+            if action == Action.ENTER:
+                solution = self.algorithm(self.max_depth)
+                last_state = solution[0][-1]
+                self.model.set_instructions(last_state.get_instructions())
+                self.calculate_path()
+                self.running = True

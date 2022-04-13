@@ -43,10 +43,10 @@ class RobotMazeSolver(SearchProblemSolver):
         if (not state.is_simulation_state()):
             for instruction in ['U','D','L','R']:
                 new_instructions = instructions.copy() + [instruction]
-                new_states.append(new_instructions)
+                new_states.append(RobotMazeState(new_instructions))
 
             if not RobotMazeState.has_cycle(instructions):
-                new_states.append(instructions.copy() + ['E'])
+                new_states.append(RobotMazeState(instructions.copy() + ['E']))
         else: # Already ended
             return []
         return new_states
@@ -68,6 +68,10 @@ class RobotMazeSolver(SearchProblemSolver):
                     nextPosition = (position[0] - 1, position[1])
                 elif instruction == 'R':
                     nextPosition = (position[0] + 1, position[1])
+                
+                if position == endPosition:
+                    return True
+
                 # Check if nextPosition is obtainable
                 if self.maze.connected(position, nextPosition):
                     position = nextPosition
