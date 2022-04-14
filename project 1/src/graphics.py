@@ -1,4 +1,5 @@
 import pygame
+from graphics_consts import IMAGES_PATH
 
 class Action:
     QUIT = 0
@@ -30,6 +31,7 @@ class PygameGUI:
         self.width = width
         self.height = height
         self.screen = None
+        self.images = dict()
 
     def get_width(self):
         return self.width
@@ -48,7 +50,13 @@ class PygameGUI:
                     actions.append(action)
         return actions
     
-    #def draw_image() # TODO?
+    def draw_image(self, filename, position, width, height):
+        image = self.images.get(filename, None)
+        if image == None:
+            image = pygame.image.load(f'{IMAGES_PATH}{filename}')
+            self.images[filename] = image
+        image = pygame.transform.scale(image, (width, height))
+        self.screen.blit(image, position.to_tuple())
 
     def draw_text(self, text, position, color):
         label = self.font.render(text, True, color)
