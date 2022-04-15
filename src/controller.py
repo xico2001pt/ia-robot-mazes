@@ -1,6 +1,7 @@
 from graphics import Action
 from model import Position
 from RobotMazeSolver import RobotMazeSolver, RobotMazeState
+from heuristics import LTPHeuristic
 
 class Controller:
     def __init__(self, model):
@@ -40,7 +41,7 @@ class GameController(Controller):
         super().__init__(model)
         self.speed = 0.05
         self.running = False
-        self.solver = RobotMazeSolver(RobotMazeState([]), self.model.get_maze())
+        self.solver = RobotMazeSolver(RobotMazeState([]), self.model.get_maze(), LTPHeuristic(self.model.get_maze()))
 
     def handle_action(self, game_loop, action, elapsed_time):
         raise NotImplementedError("GameController is an abstract class")

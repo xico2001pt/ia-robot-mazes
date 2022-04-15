@@ -12,7 +12,7 @@ class StateWrapper:
         self.state = state
         self.depth = depth
         self.parent = parent
-        self.total_cost = 0
+        self.cost = 0
         self.priority = 0
     
     def __lt__(self, other):
@@ -95,9 +95,9 @@ class SearchProblemSolver:
             for next_state in next_states:
                 next_state_wrapper = StateWrapper(next_state, depth, state_wrapper)
 
-                # Update total cost
+                # Update cost
                 cost = self.cost(next_state)
-                next_state_wrapper.total_cost = state_wrapper.total_cost + (cost if has_cost or has_heuristic else 1)
+                next_state_wrapper.cost = cost if has_cost or has_heuristic else depth
 
                 # Update priority
                 next_state_wrapper.priority = cost if has_cost else 1
@@ -105,7 +105,7 @@ class SearchProblemSolver:
 
                 # Check for final state
                 if self.is_final_state(next_state):
-                    print(next_state_wrapper.total_cost)
+                    print('cost', next_state_wrapper.cost, 'visited_nodes', visited_nodes)
                     return (SearchProblemSolver.get_path(next_state_wrapper), visited_nodes)
                 queue.put(next_state_wrapper)
         return ([], visited_nodes)
