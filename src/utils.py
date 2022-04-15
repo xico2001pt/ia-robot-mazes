@@ -25,6 +25,22 @@ def LSRS(string, debug=False):  # LSRS - Longest Successive Repeated Substrings
     else:
         return LSRS(string[0 : start], debug) + string[start : start + maxLength] + LSRS(string[start + maxLength * (repetitions + 1) :], debug)
 
+def needed_directions(maze):
+    (xi, yi), (xf, yf) = maze.get_start_position(), maze.get_end_position()
+    directions = []
+
+    if xf > xi:
+        directions.append('R')
+    elif xf < xi:
+        directions.append('L')
+    
+    if yf > yi:
+        directions.append('D')
+    elif yf < yi:
+        directions.append('U')
+    
+    return directions
+
 # Testing
 if __name__ == "__main__":
     print(LSRS("adadadadadadadadahaksjdhakjaldknabcdabcdabcdaaa", True))

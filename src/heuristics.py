@@ -1,5 +1,5 @@
 from solver import State, SearchProblemSolver
-from utils import LSRS
+from utils import LSRS, needed_directions
 
 class LTPState(State):
     def __init__(self, x, y, current_direction='', turns=[]):
@@ -67,6 +67,14 @@ class LTPHeuristic:
     
     def __call__(self, state):
         return abs(len(state) - self.compareValue)
+
+class DirectionsHeuristic:
+    def __init__(self, maze):
+        self.maze = maze
+        self.directions = needed_directions(maze)
+    
+    def __call__(self, state):
+        return sum([0 if direction in state.get_instructions() else 1 for direction in self.directions])
 
 if __name__ == "__main__":
     from maze import Maze

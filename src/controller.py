@@ -1,7 +1,7 @@
 from graphics import Action
 from model import Position
 from RobotMazeSolver import RobotMazeSolver, RobotMazeState
-from heuristics import LTPHeuristic
+from heuristics import LTPHeuristic, DirectionsHeuristic
 
 class Controller:
     def __init__(self, model):
