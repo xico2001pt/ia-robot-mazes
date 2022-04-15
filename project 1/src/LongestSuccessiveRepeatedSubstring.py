@@ -1,26 +1,29 @@
 # Longest Successive Repeated Substring
 def LSRS(string):
     length = len(string)
+    #print(f"> Analysing string: {string}")
 
     # The string must be 4 characters long at minimum
     if length < 4:
         return string
 
     # Find longest succesive substring repeated at least once
-    start, maxLength = 0, 0
+    start, maxLength, repetitions = 0, 0, 1
     for i in range(length - 4 + 1):
         subLength = length - i
         for l in range(subLength // 2, 1, -1):
             if string[i : i + l] == string[i + l : i + 2 * l]:
-                if l > maxLength:
-                    start, maxLength = i, l
-
-    # Find how many times it repeats
-    timesRepeated = 2
-    while string[start : start + maxLength] == string[start + maxLength * timesRepeated: start + maxLength * (timesRepeated + 1)]:
-        timesRepeated += 1
+                if l > maxLength:                                               # Found a new largest substring
+                    start, maxLength, repetitions = i, l, 1
+                    #print(f"> Found a substring:  start = {start:2}, length = {maxLength:2}, repetitions = {repetitions:2}")
+                elif l == maxLength and i == start + maxLength * repetitions:   # Found a successive substring
+                    repetitions += 1
+                    #print(f"> Found a repetition: start = {start:2}, length = {maxLength:2}, repetitions = {repetitions:2}")
     
-    return LSRS(string[0 : start]) + string[start : start + maxLength] + LSRS(string[start + maxLength * timesRepeated :])
+    if maxLength == 0:  # No repeated substring found
+        return string
+    else:
+        return LSRS(string[0 : start]) + string[start : start + maxLength] + LSRS(string[start + maxLength * (repetitions + 1) :])
 
 if __name__ == "__main__":
-    print(LSRS("babaabaaabaaabaaabaababababa"))
+    print(LSRS("adadadadadadadadahaksjdhakjaldknabcdabcdabcdaaa"))
