@@ -1,4 +1,5 @@
 from solver import State, SearchProblemSolver
+from utils import LSRS
 
 class LTPState(State):
     def __init__(self, x, y, current_direction='', turns=[]):
@@ -9,6 +10,9 @@ class LTPState(State):
 
     def get_number_of_turns(self):
         return len(self.turns)
+    
+    def get_turns(self):
+        return self.turns
     
     def __str__(self):
         return f"({self.x},{self.y}) - {self.turns}"
@@ -51,6 +55,18 @@ class LTPSolver(SearchProblemSolver):
 
     def is_final_state(self, state):
         return (state.x, state.y) == self.maze.get_end_position()
+
+# TODO: Could be extended from an interface
+class LTPHeuristic:
+    def __init__(self, maze):
+        self.maze = maze
+        initial_state = LTPState(*maze.get_start_position())
+        solver = LTPSolver(initial_state, maze)
+        solution = LSRS(solver.breath_first_search(50)[0][-1].get_turns())
+        self.compareValue = len(solution)
+    
+    def __call__(self, state):
+        return abs(len(state) - self.compareValue)
 
 if __name__ == "__main__":
     from maze import Maze

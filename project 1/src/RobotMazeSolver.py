@@ -27,15 +27,13 @@ class RobotMazeState(State):
         return len(self.instructions)
 
 class RobotMazeSolver(SearchProblemSolver):
-    def __init__(self, initial_state, maze):
+    def __init__(self, initial_state, maze, heuristic):
         super().__init__(initial_state)
         self.maze = maze
+        self.heuristic = heuristic
     
     def cost(self, state):
         return len(state) - (1 if state.is_simulation_state() else 0)
-    
-    def heuristic(self, state):
-        raise NotImplementedError()
     
     def operators(self, state):
         new_states = []
@@ -76,3 +74,11 @@ class RobotMazeSolver(SearchProblemSolver):
                 if self.maze.connected(position, nextPosition):
                     position = nextPosition
         return position == endPosition
+
+# Testing
+if __name__ == "__main__":
+    from maze import Maze
+    from heuristics import LTPHeuristic
+    maze = Maze('../assets/mazes/example_maze.txt')
+    solver = RobotMazeSolver(RobotMazeState([]), maze, LTPHeuristic(maze))
+    print(solver.heuristic(RobotMazeState(['R', 'U'])))
