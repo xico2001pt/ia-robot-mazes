@@ -55,12 +55,18 @@ class GameController(Controller):
                     self.model.target_pos = Position(self.model.current_pos.x + 0.25*d[0], self.model.current_pos.y + 0.25*d[1])
                 else:
                     self.model.target_pos = Position(*self.model.path[self.model.current_target])
+                
+                if(self.model.current_target == 0 or self.model.path[self.model.current_target - 1] not in ['U','D','L','R']): #Positions after UDLR are 'reset' positions (Character bounces against wall and comes back to its original position)
+                    self.model.get_sequence().advance_instruction()
                 self.model.current_target += 1
         else:
-            delta_x = self.model.target_pos.x-self.model.current_pos.x
-            delta_y = self.model.target_pos.y-self.model.current_pos.y
-            self.model.current_pos.x += min(self.speed*(1 if delta_x > 0 else -1), delta_x, key=abs)
-            self.model.current_pos.y += min(self.speed*(1 if delta_y > 0 else -1), delta_y, key=abs)
+            self.move_toward_target()
+    
+    def move_toward_target(self):
+        delta_x = self.model.target_pos.x-self.model.current_pos.x
+        delta_y = self.model.target_pos.y-self.model.current_pos.y
+        self.model.current_pos.x += min(self.speed*(1 if delta_x > 0 else -1), delta_x, key=abs)
+        self.model.current_pos.y += min(self.speed*(1 if delta_y > 0 else -1), delta_y, key=abs)
 
     def calculate_path(self):
         self.model.path.clear()

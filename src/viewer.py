@@ -122,7 +122,8 @@ class InstructionSequenceViewer(Viewer):
         for i in range(self.model.get_size()):
             if(i < len(sequence)):
                 pos = Position(consts.INSTRUCTION_WIDTH*i + consts.INSTRUCTION_WIDTH/2, consts.INSTRUCTION_WIDTH/2)
-                gui.draw_centered_text(sequence[i], pos, consts.TEXT_COLOR)
+                color = consts.TEXT_COLOR if i != self.model.get_current_instruction() else consts.WALL_COLOR
+                gui.draw_centered_text(sequence[i], pos, color)
             gui.draw_rectangle(Position(consts.INSTRUCTION_WIDTH*i, 0), size*consts.INSTRUCTION_WIDTH, consts.INSTRUCTION_WIDTH, consts.WALL_COLOR, 5)
 
 class PathViewer(Viewer):

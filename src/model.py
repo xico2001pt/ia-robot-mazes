@@ -31,12 +31,16 @@ class InstructionSequence:
     def __init__(self, size, sequence=[]):
         self.sequence = sequence
         self.size = size
+        self.current_instruction = -2
     
     def get_sequence(self):
         return self.sequence
     
     def get_size(self):
         return self.size
+
+    def get_current_instruction(self):
+        return self.current_instruction
     
     def full(self):
         return self.size == len(self.sequence)
@@ -52,6 +56,9 @@ class InstructionSequence:
     def set_instructions(self, instructions):
         self.sequence = instructions.copy()
         self.size = len(self.sequence)
+    
+    def advance_instruction(self):
+        self.current_instruction = (self.current_instruction+1) % self.size
 
 
 class Game:
