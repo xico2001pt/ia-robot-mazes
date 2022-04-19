@@ -25,4 +25,4 @@ class MainMenuState(State):
 
 class GameState(State):
     def __init__(self, model):
-        super().__init__(model, AIGameController(model, 'astar'), GameViewer(model))
+        super().__init__(model, HumanGameController(model), GameViewer(model))
