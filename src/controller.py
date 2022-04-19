@@ -59,6 +59,8 @@ class GameController(Controller):
                 if(self.model.current_target == 0 or self.model.path[self.model.current_target - 1] not in ['U','D','L','R']): #Positions after UDLR are 'reset' positions (Character bounces against wall and comes back to its original position)
                     self.model.get_sequence().advance_instruction()
                 self.model.current_target += 1
+            elif(self.running): # Final target achieved
+                self.model.end_game()
         else:
             self.move_toward_target()
     
@@ -119,6 +121,9 @@ class HumanGameController(GameController):
                 self.model.add_instruction(self.actions[action])
             elif action == Action.BACKSPACE:
                 self.model.pop_instruction()
+        if self.model.gameover:
+            if action == Action.ENTER:
+                exit(0)
     
 class AIGameController(GameController):
     def __init__(self, model, algorithm='bfs', max_depth=15):
@@ -141,3 +146,6 @@ class AIGameController(GameController):
                 self.model.set_instructions(last_state.get_instructions())
                 self.calculate_path()
                 self.running = True
+        if self.model.gameover:
+            if action == Action.ENTER:
+                exit(0)

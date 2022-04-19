@@ -69,6 +69,13 @@ class Game:
         self.current_pos = Position(*maze.get_start_position())
         self.target_pos = Position(self.current_pos.x, self.current_pos.y) #TODO: Copy class is cleaner
         self.current_target = 0
+        self.gameover = False
+
+    def is_gameover(self):
+        return self.gameover
+    
+    def end_game(self):
+        self.gameover = True
 
     def get_maze(self):
         return self.maze
