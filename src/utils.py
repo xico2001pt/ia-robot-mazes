@@ -1,29 +1,33 @@
-# Function that unifies the largest successive patterns
-def LSRS(string, debug=False):  # LSRS - Longest Successive Repeated Substrings
+def removeLongestSubstrings(string):
+    result = string
+    start, end = longestRepeatedSubstring(result)
+    while end - start > 1:
+        result = result[0 : start] + result[end :]
+        start, end = longestRepeatedSubstring(result)
+    return result
+
+def longestRepeatedSubstring(string):
     length = len(string)
-    if debug: print(f"> Analysing string:   {string}")
+    L = [[0 for _ in range(length + 1)] for _ in range(length + 1)]
+    maxLength, start, end = 0, 0, 0
+    for i in range(1, length + 1):
+        for j in range(i + 1, length + 1):
+            if string[i - 1] == string[j - 1] and L[i - 1][j - 1] < (j - i):
+                L[i][j] = L[i - 1][j - 1] + 1
+                if L[i][j] > maxLength:
+                    maxLength = L[i][j]
+                    start = j - maxLength
+                    end = j
+            else:
+                L[i][j] = 0
 
-    # The string must be 4 characters long at minimum
-    if length < 4:
-        return string
+    """
+    # Debug
+    for line in L[1:]:
+        print(line[1:])
+    """
 
-    # Find longest succesive substring repeated at least once
-    start, maxLength, repetitions = 0, 0, 1
-    for i in range(length - 4 + 1):
-        subLength = length - i
-        for l in range(subLength // 2, 1, -1):
-            if string[i : i + l] == string[i + l : i + 2 * l]:
-                if l > maxLength:                                               # Found a new largest substring
-                    start, maxLength, repetitions = i, l, 1
-                    if debug: print(f"> Found a substring:  start = {start:2}, length = {maxLength:2}, repetitions = {repetitions:2}")
-                elif l == maxLength and i == start + maxLength * repetitions:   # Found a successive substring
-                    repetitions += 1
-                    if debug: print(f"> Found a repetition: start = {start:2}, length = {maxLength:2}, repetitions = {repetitions:2}")
-    
-    if maxLength == 0:  # No repeated substring found
-        return string
-    else:
-        return LSRS(string[0 : start], debug) + string[start : start + maxLength] + LSRS(string[start + maxLength * (repetitions + 1) :], debug)
+    return start, end
 
 def needed_directions(maze):
     (xi, yi), (xf, yf) = maze.get_start_position(), maze.get_end_position()
@@ -43,4 +47,4 @@ def needed_directions(maze):
 
 # Testing
 if __name__ == "__main__":
-    print(LSRS("adadadadadadadadahaksjdhakjaldknabcdabcdabcdaaa", True))
+    print(removeLongestSubstrings("rulurdru"))

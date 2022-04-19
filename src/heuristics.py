@@ -1,5 +1,5 @@
 from solver import State, SearchProblemSolver
-from utils import LSRS, needed_directions
+from utils import removeLongestSubstrings, needed_directions
 
 class LTPState(State):
     def __init__(self, x, y, current_direction='', turns=[]):
@@ -62,7 +62,7 @@ class LTPHeuristic:
         self.maze = maze
         initial_state = LTPState(*maze.get_start_position())
         solver = LTPSolver(initial_state, maze)
-        solution = LSRS(solver.breath_first_search(50)[0][-1].get_turns())
+        solution = removeLongestSubstrings(solver.breath_first_search(50)[0][-1].get_turns())
         self.compareValue = len(solution)
     
     def __call__(self, state):
