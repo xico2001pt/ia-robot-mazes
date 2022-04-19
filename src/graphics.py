@@ -1,5 +1,5 @@
 import pygame
-from graphics_consts import IMAGES_PATH
+from graphics_consts import IMAGES_PATH, BLOCK_WIDTH
 
 class Action:
     QUIT = 0
@@ -107,7 +107,7 @@ class PygameScreenGUI(PygameGUI):
         pygame.init()
         pygame.font.init()
         self.screen = pygame.display.set_mode((width, height))
-        self.font = pygame.font.SysFont("monospace", 64)
+        self.font = pygame.font.SysFont("monospace", BLOCK_WIDTH//2)
 
     def close(self):
         pygame.font.quit()
@@ -116,5 +116,5 @@ class PygameScreenGUI(PygameGUI):
 class PygameSurfaceGUI(PygameGUI):
     def __init__(self, width, height):
         super().__init__(width, height)
-        self.font = pygame.font.SysFont("monospace", 64)
+        self.font = pygame.font.SysFont("monospace", BLOCK_WIDTH//2)
         self.screen = pygame.Surface((width, height))
