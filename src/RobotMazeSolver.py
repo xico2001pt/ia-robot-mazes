@@ -45,11 +45,11 @@ class RobotMazeSolver(SearchProblemSolver):
 
             if not RobotMazeState.has_cycle(instructions):
                 new_states.append(RobotMazeState(instructions.copy() + ['E']))
-        else: # Already ended
-            return []
         return new_states
     
     def is_final_state(self, state):
+        if not state.is_simulation_state():
+            return False
         visited = set()
         position = self.maze.start_position
         endPosition = self.maze.end_position
@@ -83,4 +83,5 @@ if __name__ == "__main__":
         maze = Maze(f"../assets/mazes/maze{str(test+1).zfill(2)}.txt")
         solver = RobotMazeSolver(RobotMazeState([]), maze, LTPHeuristic(maze))
         solution = solver.A_star_search(15)
-        print(f"Solution: {solution[0][-1]} visited {solution[1]} states")
+        if len(solution[0][-1]) - 1 > maze.minimum_instructions:
+            print(f"Maze: {test + 1} Solution: {solution[0][-1]} visited {solution[1]} states")

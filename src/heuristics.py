@@ -66,7 +66,8 @@ class LTPHeuristic:
         self.compareValue = len(solution)
     
     def __call__(self, state):
-        return max(0, self.compareValue - len(state) - (1 if state.get_instructions()[-1] == 'E' else 0))
+        state_size = len(state) - (1 if state.get_instructions()[-1] == 'E' else 0)
+        return max(0, self.compareValue - state_size)
 
 class DirectionsHeuristic:
     def __init__(self, maze):

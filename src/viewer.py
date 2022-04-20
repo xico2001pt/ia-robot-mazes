@@ -152,7 +152,6 @@ class CharacterViewer(Viewer):
     
     def draw(self, gui):
         pos = Position(self.model.x*consts.BLOCK_WIDTH + consts.BLOCK_WIDTH/2 - consts.CHARACTER_WIDTH/2, self.model.y*consts.BLOCK_WIDTH + consts.BLOCK_WIDTH/2 - consts.CHARACTER_WIDTH/2)
-        #gui.draw_rectangle(pos, consts.CHARACTER_WIDTH, consts.CHARACTER_WIDTH, consts.CHARACTER_COLOR, 6)
         gui.draw_image(consts.ROBOT_IMG, pos, consts.CHARACTER_WIDTH, consts.CHARACTER_WIDTH)
 
 class GameOverViewer(Viewer):

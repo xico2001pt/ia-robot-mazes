@@ -87,6 +87,8 @@ class GameController(Controller):
                     next_position = (position[0] - 1, position[1])
                 elif instruction == 'R':
                     next_position = (position[0] + 1, position[1])
+                elif instruction == 'E':
+                    continue
                 
                 self.model.path += [position]
 
