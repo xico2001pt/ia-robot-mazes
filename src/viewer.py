@@ -68,7 +68,7 @@ class MazeViewer(Viewer):
 
     def draw_start_and_end(self, gui):
         self.draw_letter_on_block(*self.model.get_start_position(), 'S', gui)
-        self.draw_letter_on_block(*self.model.get_end_position(), 'E', gui)
+        self.draw_letter_on_block(*self.model.get_end_position(), 'F', gui)
     
     def draw_letter_on_block(self, x, y, letter, gui):
         x = x * consts.BLOCK_WIDTH + consts.BLOCK_WIDTH/2

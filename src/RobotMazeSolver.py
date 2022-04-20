@@ -3,17 +3,19 @@ from solver import State, SearchProblemSolver
 class RobotMazeState(State):
     def __init__(self, instructions):
         self.instructions = instructions
-        # ['U','D','L','R','E']
+        # ['U','D','L','R']
 
     def get_instructions(self):
         return self.instructions
     
-    def is_simulation_state(self):
-        return len(self.instructions) > 0 and self.instructions[-1] == 'E'
-    
-    def has_cycle(instructions):
-        n = len(instructions) // 2
-        return len(instructions) % 2 == 0 and all(instructions[i] == instructions[i+n] for i in range(n))
+    def has_cycle(self):
+        n = len(self.instructions)
+        for length in range(1, n // 2 + 1):
+            if n % length == 0:
+                timesRepeated = n // length
+                if self.instructions[0 : length] * timesRepeated == self.instructions:
+                    return True
+        return False            
     
     def __str__(self):
         return '[' + ', '.join(i for i in self.get_instructions()) + ']'
@@ -33,22 +35,20 @@ class RobotMazeSolver(SearchProblemSolver):
         self.heuristic = heuristic
     
     def cost(self, state):
-        return len(state) - (1 if state.is_simulation_state() else 0)
+        return len(state)
     
     def operators(self, state):
         new_states = []
         instructions = state.get_instructions()
-        if (not state.is_simulation_state()):
-            for instruction in ['U','D','L','R']:
-                new_instructions = instructions.copy() + [instruction]
-                new_states.append(RobotMazeState(new_instructions))
+        
+        for instruction in ['U','D','L','R']:
+            new_instructions = instructions.copy() + [instruction]
+            new_states.append(RobotMazeState(new_instructions))
 
-            if not RobotMazeState.has_cycle(instructions):
-                new_states.append(RobotMazeState(instructions.copy() + ['E']))
         return new_states
     
     def is_final_state(self, state):
-        if not state.is_simulation_state():
+        if state.has_cycle():
             return False
         visited = set()
         position = self.maze.start_position
@@ -83,5 +83,5 @@ if __name__ == "__main__":
         maze = Maze(f"../assets/mazes/maze{str(test+1).zfill(2)}.txt")
         solver = RobotMazeSolver(RobotMazeState([]), maze, LTPHeuristic(maze))
         solution = solver.A_star_search(15)
-        if len(solution[0][-1]) - 1 > maze.minimum_instructions:
+        if len(solution[0][-1]) > maze.minimum_instructions:
             print(f"Maze: {test + 1} Solution: {solution[0][-1]} visited {solution[1]} states")
