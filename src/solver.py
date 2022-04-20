@@ -78,13 +78,17 @@ class SearchProblemSolver:
         """
         queue.put(StateWrapper(self.initial_state, 0, None))
 
-        visited_nodes = 0
+        visited_nodes = 1
         while queue.qsize() > 0:
             state_wrapper = queue.get()
 
+            # Check for final state
+            if self.is_final_state(state_wrapper.state):
+                #print('cost', next_state_wrapper.cost, 'visited_nodes', visited_nodes)
+                return (SearchProblemSolver.get_path(state_wrapper), visited_nodes)
+
             visited_nodes += 1
             depth = state_wrapper.depth
-            #print(f'{3*depth*" "}{state_wrapper.state}')
             depth += 1
             if depth > max_depth:
                 continue
@@ -103,10 +107,6 @@ class SearchProblemSolver:
                 next_state_wrapper.priority = cost if has_cost else 1
                 next_state_wrapper.priority += self.heuristic(next_state) if has_heuristic else 0
 
-                # Check for final state
-                if self.is_final_state(next_state):
-                    print('cost', next_state_wrapper.cost, 'visited_nodes', visited_nodes)
-                    return (SearchProblemSolver.get_path(next_state_wrapper), visited_nodes)
                 queue.put(next_state_wrapper)
         return ([], visited_nodes)
 

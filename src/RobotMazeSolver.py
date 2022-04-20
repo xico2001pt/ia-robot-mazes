@@ -78,8 +78,10 @@ class RobotMazeSolver(SearchProblemSolver):
 # Testing
 if __name__ == "__main__":
     from maze import Maze
-    from heuristics import LTPHeuristic
+    from heuristics import *
+
     for test in range(20):
+        print(f"Testing maze {test + 1}")
         maze = Maze(f"../assets/mazes/maze{str(test+1).zfill(2)}.txt")
         solver = RobotMazeSolver(RobotMazeState([]), maze, LTPHeuristic(maze))
         solution = solver.A_star_search(15)
