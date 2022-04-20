@@ -27,3 +27,6 @@ class GameLoop:
 
     def stop(self):
         self.running = False
+    
+    def set_state(self, state):
+        self.state = state

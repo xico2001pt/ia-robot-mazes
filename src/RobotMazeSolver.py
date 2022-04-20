@@ -3,7 +3,7 @@ from solver import State, SearchProblemSolver
 class RobotMazeState(State):
     def __init__(self, instructions):
         self.instructions = instructions
-        # ['U','D','L','R']
+        # ['U','D','L','R','E']
 
     def get_instructions(self):
         return self.instructions
@@ -79,6 +79,8 @@ class RobotMazeSolver(SearchProblemSolver):
 if __name__ == "__main__":
     from maze import Maze
     from heuristics import LTPHeuristic
-    maze = Maze('../assets/mazes/example_maze.txt')
-    solver = RobotMazeSolver(RobotMazeState([]), maze, LTPHeuristic(maze))
-    print(solver.heuristic(RobotMazeState(['R', 'U'])))
+    for test in range(20):
+        maze = Maze(f"../assets/mazes/maze{str(test+1).zfill(2)}.txt")
+        solver = RobotMazeSolver(RobotMazeState([]), maze, LTPHeuristic(maze))
+        solution = solver.A_star_search(15)
+        print(f"Solution: {solution[0][-1]} visited {solution[1]} states")
