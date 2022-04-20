@@ -1,5 +1,3 @@
-from turtle import position
-
 class Position:
     def __init__(self, x, y):
         self.x = x
@@ -21,10 +19,6 @@ class Position:
         return Position(self.x + 1, self.y)
     
     # TODO: __eq__()
-
-class MainMenu:
-    def __init__(self):
-        self.x = 0
     
 class InstructionSequence:
     def __init__(self, size, sequence=[]):
@@ -59,6 +53,38 @@ class InstructionSequence:
     def advance_instruction(self):
         self.current_instruction = (self.current_instruction+1) % self.size
 
+class Selection:
+    def __init__(self, options):
+        self.options = {i : option for i, option in enumerate(options)}
+        self.selected = 0
+    
+    def get_selected_option():
+        return self.options[self.selected]
+
+    def previous_option():
+        self.selected = (self.selected - 1) % self.options.len()
+    
+    def next_option():
+        self.selected = (self.selected + 1) % self.options.len()
+
+class MainMenu:
+    def __init__(self, game_states, mazes):
+        self.selections = Selection([Selection(game_states), Selection(mazes)])
+    
+    def next_game_type():
+        self.gameTypeSelection.next_option()
+
+    def previous_game_type():
+        self.gameTypeSelection.previous_option()
+    
+    def next_maze():
+        self.mazeSelection.next_option()
+
+    def previous_maze():
+        self.mazeSelection.previous_option()
+
+    def get_selected_state():
+        return self.gameTypeSelection.get_selected_option()(self.mazeSelection.get_selected_option())
 
 class Game:
     def __init__(self, maze, path=[]):

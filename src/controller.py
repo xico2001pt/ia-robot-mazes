@@ -24,7 +24,8 @@ class Controller:
 class MainMenuController(Controller):
     def handle_action(self, game_loop, action, elapsed_time):
         if action == Action.ENTER:
-            self.model.x = 0
+            game_loop.set_state(self.model.get_selected_state())
+        
     
     def step(self, game_loop, elapsed_time):
         self.model.x += 1
@@ -87,8 +88,6 @@ class GameController(Controller):
                     next_position = (position[0] - 1, position[1])
                 elif instruction == 'R':
                     next_position = (position[0] + 1, position[1])
-                elif instruction == 'E':
-                    continue
                 
                 self.model.path += [position]
 
