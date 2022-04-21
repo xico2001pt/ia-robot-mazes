@@ -58,15 +58,17 @@ class PygameGUI:
         image = pygame.transform.scale(image, (width, height))
         self.screen.blit(image, position.to_tuple())
 
-    def draw_text(self, text, position, color):
+    def draw_text(self, text, position, color, size):
+        self.font = pygame.font.SysFont("monospace", size)
         label = self.font.render(text, True, color)
         self.screen.blit(label, position.to_tuple())
     
-    def draw_centered_text(self, text, position, color):
+    def draw_centered_text(self, text, position, color, size):
+        self.font = pygame.font.SysFont("monospace", size)
         width, height = self.font.size(text)
+        centered_position = (position.x - width/2, position.y - height/2)
         label = self.font.render(text, True, color)
-        correct_position = (position.x - width/2, position.y - height/2)
-        self.screen.blit(label, correct_position)
+        self.screen.blit(label, centered_position)
 
     def draw_line(self, start_position, end_position, color, thickness=1):
         pygame.draw.line(
@@ -110,7 +112,6 @@ class PygameScreenGUI(PygameGUI):
         pygame.init()
         pygame.font.init()
         self.screen = pygame.display.set_mode((width, height))
-        self.font = pygame.font.SysFont("monospace", BLOCK_WIDTH//2)
 
     def close(self):
         pygame.font.quit()
@@ -119,5 +120,4 @@ class PygameScreenGUI(PygameGUI):
 class PygameSurfaceGUI(PygameGUI):
     def __init__(self, width, height):
         super().__init__(width, height)
-        self.font = pygame.font.SysFont("monospace", BLOCK_WIDTH//2)
         self.screen = pygame.Surface((width, height))

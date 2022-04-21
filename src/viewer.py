@@ -15,25 +15,31 @@ class Viewer:
 class MainMenuViewer(Viewer):
     def draw(self, gui):
         self.draw_background(gui)
+        self.draw_title(gui)
+        self.draw_credits(gui)
         self.draw_selections(gui)
     
     def draw_title(self, gui):
-        # TODO
-        pass
+        gui.draw_centered_text("Robot Mazes", Position(gui.get_width()/2, gui.get_height()*0.2), consts.MENU_TITLE_COLOR, consts.MENU_TITLE_SIZE)
 
     def draw_credits(self, gui):
-        # TODO
-        pass
+        lines = ["Members:", "Adriano Soares", "Filipe Campos", "Francisco Cerqueira"]
+        for idx, line in enumerate(lines):
+            gui.draw_text(line, Position(consts.MENU_CREDITS_PADDING, gui.get_height()-(len(lines)-idx)*consts.MENU_CREDITS_SIZE-consts.MENU_CREDITS_PADDING), consts.MENU_CREDITS_COLOR, consts.MENU_CREDITS_SIZE)
     
     def draw_selections(self, gui):
-        x, y = 50, 50
-        for selection in self.model.get_selections().get_options():
-            self.draw_selection(gui, selection, Position(x, y), consts.WALL_COLOR)
-            y += consts.CHARACTER_WIDTH + consts.MENU_SELECTION_SPACING
+        spacing = consts.MENU_SELECTION_SIZE + consts.MENU_SELECTION_SPACING
+        selections = self.model.get_selections()
+        options = selections.get_options()
+        x, y = gui.get_width()/2, gui.get_height()/2 - (spacing * len(options) - consts.MENU_SELECTION_SPACING)/2
+
+        for idx, selection in enumerate(options):
+            color = consts.SELECTED_SELECTION_COLOR if selections.get_selected_index() == idx else consts.UNSELECTED_SELECTION_COLOR
+            self.draw_selection(gui, selection, Position(x, y), color)
+            y += spacing
 
     def draw_selection(self, gui, selection, position, color):
-        gui.draw_text(str(selection.get_selected_option()), position, color)
-        # TODO: DRAW BOX AND ARROWS
+        gui.draw_centered_text(str(selection.get_selected_option()), position, color, consts.MENU_SELECTION_SIZE)
 
 class MazeViewer(Viewer):
     def __init__(self, model):
@@ -91,7 +97,7 @@ class MazeViewer(Viewer):
     def draw_letter_on_block(self, x, y, letter, gui):
         x = x * consts.BLOCK_WIDTH + consts.BLOCK_WIDTH/2
         y = y * consts.BLOCK_WIDTH + consts.BLOCK_WIDTH/2
-        gui.draw_centered_text(letter, Position(x, y), consts.TEXT_COLOR)
+        gui.draw_centered_text(letter, Position(x, y), consts.TEXT_COLOR, consts.BLOCK_WIDTH//2)
 
 class GameViewer(Viewer):
     def __init__(self, model):
@@ -145,7 +151,7 @@ class InstructionSequenceViewer(Viewer):
             if(i < len(sequence)):
                 pos = Position(consts.INSTRUCTION_WIDTH*i + consts.INSTRUCTION_WIDTH/2, consts.INSTRUCTION_WIDTH/2)
                 color = consts.TEXT_COLOR if i != self.model.get_current_instruction() else consts.WALL_COLOR
-                gui.draw_centered_text(sequence[i], pos, color)
+                gui.draw_centered_text(sequence[i], pos, color, consts.BLOCK_WIDTH//2)
             gui.draw_rectangle(Position(consts.INSTRUCTION_WIDTH*i, 0), size*consts.INSTRUCTION_WIDTH, consts.INSTRUCTION_WIDTH, consts.WALL_COLOR, 5)
 
 class PathViewer(Viewer):
@@ -180,5 +186,5 @@ class GameOverViewer(Viewer):
         pos = Position(0, 0)
         gui.draw_rectangle(pos, 200, 60, consts.BACKGROUND_COLOR)
         gui.draw_rectangle(pos, 200, 60, consts.WALL_COLOR, 6)
-        gui.draw_text("Gameover", Position(10,10), consts.WALL_COLOR)
+        gui.draw_text("Gameover", Position(10,10), consts.WALL_COLOR, consts.BLOCK_WIDTH//2)
         

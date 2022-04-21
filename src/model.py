@@ -74,6 +74,9 @@ class Selection:
     
     def get_selected_option(self):
         return self.options[self.selected]
+    
+    def get_selected_index(self):
+        return self.selected
 
     def previous_option(self):
         self.selected = (self.selected - 1) % len(self.options)
