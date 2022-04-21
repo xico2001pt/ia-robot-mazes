@@ -22,9 +22,18 @@ class State:
 
 class MainMenuState(State):
     def __init__(self):
-        game_types = [Option("Player Input", HumanGameState), Option("AI Input", AIGameState)]
+        game_types = [
+            Option("Player Input", "human"),
+            Option("AI Input", "AI")
+        ]
         mazes = [Option(f"Maze {str(i).zfill(2)}", f"../assets/mazes/maze{str(i).zfill(2)}.txt") for i in range(1, 21)]
-        algorithms = [Option("bfs"), Option("dfs"), Option("ids"), Option("astar"), Option("greedy")]
+        algorithms = [
+            Option("Breadth First Search", "bfs"),
+            Option("Depth First Search", "dfs"),
+            Option("Iterative Deepening Search", "ids"),
+            Option("A-Star", "astar"),
+            Option("Greedy", "greedy")
+        ]
         main_menu = MainMenu(game_types, mazes, algorithms)
         super().__init__(main_menu, MainMenuController(main_menu), MainMenuViewer(main_menu))
 

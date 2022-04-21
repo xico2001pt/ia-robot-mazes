@@ -54,9 +54,9 @@ class InstructionSequence:
         self.current_instruction = (self.current_instruction+1) % self.size
 
 class Option:
-    def __init__(self, description, function=None):
+    def __init__(self, description, value=None):
         self.description = description
-        self.function = function if function != None else description
+        self.value = value if value != None else description
 
     def __str__(self):
         return self.description
@@ -64,8 +64,8 @@ class Option:
     def __eq__(self, description):
         return self.description == description
     
-    def get_function(self):
-        return self.function
+    def get_value(self):
+        return self.value
 
 class Selection:
     def __init__(self, options):

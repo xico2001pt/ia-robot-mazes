@@ -39,11 +39,15 @@ class MainMenuController(Controller):
         pass
 
     def get_state_selected(self):
-        game_type_option, maze_option, algorithm_option = (selection.get_selected_option() for selection in self.model.get_selections().get_options())
-        if game_type_option == "Player Input":
-            return game_type_option.get_function()(Game(Maze(maze_option.get_function())))
-        else:
-            return game_type_option.get_function()(Game(Maze(maze_option.get_function())), algorithm_option.get_function())
+        game_type, maze_path, algorithm = (selection.get_selected_option().get_value() for selection in self.model.get_selections().get_options())
+        maze = Maze(maze_path)
+        model = Game(maze)
+        if game_type == "human":
+            from state import HumanGameState
+            return HumanGameState(model)
+        elif game_type == "AI":
+            from state import AIGameState
+            return AIGameState(model, algorithm)
 
 class GameController(Controller):
     directions = {
