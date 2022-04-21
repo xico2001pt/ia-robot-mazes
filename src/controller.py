@@ -1,5 +1,6 @@
 from graphics import Action
-from model import Position
+from model import Position, Game
+from maze import Maze
 from RobotMazeSolver import RobotMazeSolver, RobotMazeState
 from heuristics import LTPHeuristic, DirectionsHeuristic
 
@@ -24,11 +25,25 @@ class Controller:
 class MainMenuController(Controller):
     def handle_action(self, game_loop, action, elapsed_time):
         if action == Action.ENTER:
-            game_loop.set_state(self.model.get_selected_state())
-        
+            game_loop.set_state(self.get_state_selected())
+        elif action == Action.DOWN:
+            self.model.get_selections().next_option()
+        elif action == Action.UP:
+            self.model.get_selections().previous_option()
+        elif action == Action.RIGHT:
+            self.model.get_selections().get_selected_option().next_option()
+        elif action == Action.LEFT:
+            self.model.get_selections().get_selected_option().previous_option()
     
     def step(self, game_loop, elapsed_time):
-        self.model.x += 1
+        pass
+
+    def get_state_selected(self):
+        game_type_option, maze_option, algorithm_option = (selection.get_selected_option() for selection in self.model.get_selections().get_options())
+        if game_type_option == "Player Input":
+            return game_type_option.get_function()(Game(Maze(maze_option.get_function())))
+        else:
+            return game_type_option.get_function()(Game(Maze(maze_option.get_function())), algorithm_option.get_function())
 
 class GameController(Controller):
     directions = {

@@ -4,18 +4,36 @@ import graphics_consts as consts
 
 class Viewer:
     def __init__(self, model):
-        self.model = model
-    
-    def get_model(self): # TODO: IS IT NECESSARY?
-        return self.model
+        self.model = model    
+
+    def draw_background(self, gui):
+        gui.fill_screen(consts.BACKGROUND_COLOR)
     
     def draw(self, gui):
         raise NotImplementedError()
 
 class MainMenuViewer(Viewer):
     def draw(self, gui):
-        gui.draw_rectangle(Position(10, 10+self.model.x), 50, 50, (0, 255, 0))
-        gui.draw_text("Robot Mazes!", Position(10+self.model.x, 10), (255, 0, 0))
+        self.draw_background(gui)
+        self.draw_selections(gui)
+    
+    def draw_title(self, gui):
+        # TODO
+        pass
+
+    def draw_credits(self, gui):
+        # TODO
+        pass
+    
+    def draw_selections(self, gui):
+        x, y = 50, 50
+        for selection in self.model.get_selections().get_options():
+            self.draw_selection(gui, selection, Position(x, y), consts.WALL_COLOR)
+            y += consts.CHARACTER_WIDTH + consts.MENU_SELECTION_SPACING
+
+    def draw_selection(self, gui, selection, position, color):
+        gui.draw_text(str(selection.get_selected_option()), position, color)
+        # TODO: DRAW BOX AND ARROWS
 
 class MazeViewer(Viewer):
     def __init__(self, model):
@@ -63,7 +81,7 @@ class MazeViewer(Viewer):
     
     def draw_block(self, x, y, gui):
         x, y = x * consts.BLOCK_WIDTH, y * consts.BLOCK_WIDTH
-        gui.draw_rectangle(Position(x, y), consts.BLOCK_WIDTH, consts.BLOCK_WIDTH, consts.BLOCK_COLOR) # Draw fill
+        gui.draw_rectangle(Position(x, y), consts.BLOCK_WIDTH, consts.BLOCK_WIDTH, consts.BACKGROUND_COLOR) # Draw fill TODO: Remove?
         gui.draw_rectangle(Position(x, y), consts.BLOCK_WIDTH, consts.BLOCK_WIDTH, consts.BORDER_COLOR, 1) # Draw grey border
 
     def draw_start_and_end(self, gui):
@@ -120,7 +138,7 @@ class InstructionSequenceViewer(Viewer):
 
     def draw(self, gui):
         size = self.model.get_size()
-        gui.draw_rectangle(Position(0, 0), size*consts.INSTRUCTION_WIDTH, consts.INSTRUCTION_WIDTH, consts.BLOCK_COLOR)
+        gui.draw_rectangle(Position(0, 0), size*consts.INSTRUCTION_WIDTH, consts.INSTRUCTION_WIDTH, consts.BACKGROUND_COLOR)
 
         sequence = self.model.get_sequence()
         for i in range(self.model.get_size()):
@@ -160,7 +178,7 @@ class GameOverViewer(Viewer):
     
     def draw(self, gui):
         pos = Position(0, 0)
-        gui.draw_rectangle(pos, 200, 60, consts.BLOCK_COLOR)
+        gui.draw_rectangle(pos, 200, 60, consts.BACKGROUND_COLOR)
         gui.draw_rectangle(pos, 200, 60, consts.WALL_COLOR, 6)
         gui.draw_text("Gameover", Position(10,10), consts.WALL_COLOR)
         

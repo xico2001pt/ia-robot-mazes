@@ -53,38 +53,43 @@ class InstructionSequence:
     def advance_instruction(self):
         self.current_instruction = (self.current_instruction+1) % self.size
 
+class Option:
+    def __init__(self, description, function=None):
+        self.description = description
+        self.function = function if function != None else description
+
+    def __str__(self):
+        return self.description
+
+    def __eq__(self, description):
+        return self.description == description
+    
+    def get_function(self):
+        return self.function
+
 class Selection:
     def __init__(self, options):
         self.options = {i : option for i, option in enumerate(options)}
         self.selected = 0
     
-    def get_selected_option():
+    def get_selected_option(self):
         return self.options[self.selected]
 
-    def previous_option():
-        self.selected = (self.selected - 1) % self.options.len()
+    def previous_option(self):
+        self.selected = (self.selected - 1) % len(self.options)
     
-    def next_option():
-        self.selected = (self.selected + 1) % self.options.len()
+    def next_option(self):
+        self.selected = (self.selected + 1) % len(self.options)
+
+    def get_options(self):
+        return self.options.values()
 
 class MainMenu:
-    def __init__(self, game_states, mazes):
-        self.selections = Selection([Selection(game_states), Selection(mazes)])
+    def __init__(self, game_states, mazes, algorithms):
+        self.selections = Selection([Selection(game_states), Selection(mazes), Selection(algorithms)])
     
-    def next_game_type():
-        self.gameTypeSelection.next_option()
-
-    def previous_game_type():
-        self.gameTypeSelection.previous_option()
-    
-    def next_maze():
-        self.mazeSelection.next_option()
-
-    def previous_maze():
-        self.mazeSelection.previous_option()
-
-    def get_selected_state():
-        return self.gameTypeSelection.get_selected_option()(self.mazeSelection.get_selected_option())
+    def get_selections(self):
+        return self.selections
 
 class Game:
     def __init__(self, maze, path=[]):

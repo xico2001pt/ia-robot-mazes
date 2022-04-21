@@ -1,4 +1,4 @@
-from model import MainMenu
+from model import MainMenu, Option
 from controller import HumanGameController, AIGameController, MainMenuController
 from viewer import GameViewer, MainMenuViewer
 
@@ -22,9 +22,10 @@ class State:
 
 class MainMenuState(State):
     def __init__(self):
-        game_types = [("Player Input", HumanGameState), ("AI Input", AIGameState)]
-        mazes = [(f"Maze {str(i).zfill(2)}", f"../assets/mazes/maze{str(i).zfill(2)}.txt") for i in range(1, 21)]
-        main_menu = MainMenu(game_types, mazes)
+        game_types = [Option("Player Input", HumanGameState), Option("AI Input", AIGameState)]
+        mazes = [Option(f"Maze {str(i).zfill(2)}", f"../assets/mazes/maze{str(i).zfill(2)}.txt") for i in range(1, 21)]
+        algorithms = [Option("bfs"), Option("dfs"), Option("ids"), Option("astar"), Option("greedy")]
+        main_menu = MainMenu(game_types, mazes, algorithms)
         super().__init__(main_menu, MainMenuController(main_menu), MainMenuViewer(main_menu))
 
 class GameState(State):
@@ -36,8 +37,8 @@ class HumanGameState(GameState):
         super().__init__(model, HumanGameController(model))
 
 class AIGameState(GameState):
-    def __init__(self, model):
-        super.__init__(model, AIGameController(model, "bfs"))
+    def __init__(self, model, algorithm):
+        super().__init__(model, AIGameController(model, algorithm))
 
 if __name__ == "__main__":
     test = MainMenuState()

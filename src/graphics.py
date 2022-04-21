@@ -84,6 +84,9 @@ class PygameGUI:
             pygame.Rect(position.x, position.y, width, height), 
             thickness
         )
+    
+    def fill_screen(self, color):
+        self.screen.fill(color)
 
     def clear(self):
         self.screen.fill((0, 0, 0))
