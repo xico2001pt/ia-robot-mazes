@@ -39,7 +39,7 @@ class MainMenuViewer(Viewer):
             y += spacing
 
     def draw_selection(self, gui, selection, position, color):
-        gui.draw_centered_text(str(selection.get_selected_option()), position, color, consts.MENU_SELECTION_SIZE)
+        gui.draw_centered_text("◄ " + str(selection.get_selected_option()) + " ►", position, color, consts.MENU_SELECTION_SIZE)
 
 class MazeViewer(Viewer):
     def __init__(self, model):
