@@ -37,6 +37,8 @@ class MainMenuViewer(Viewer):
             color = consts.SELECTED_SELECTION_COLOR if selections.get_selected_index() == idx else consts.UNSELECTED_SELECTION_COLOR
             self.draw_selection(gui, selection, Position(x, y), color)
             y += spacing
+        
+        gui.draw_centered_text("Press ENTER to start", Position(x, y), consts.MENU_ENTER_COLOR, int(consts.MENU_SELECTION_SIZE*0.75))
 
     def draw_selection(self, gui, selection, position, color):
         gui.draw_centered_text("◄ " + str(selection.get_selected_option()) + " ►", position, color, consts.MENU_SELECTION_SIZE)
