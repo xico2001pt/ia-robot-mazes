@@ -1,8 +1,9 @@
 from graphics import Action
-from model import Position, Game
+from model import GameOverInformation, Position, Game
 from maze import Maze
 from RobotMazeSolver import RobotMazeSolver, RobotMazeState
 from heuristics import LTPHeuristic, DirectionsHeuristic
+import state
 
 class Controller:
     def __init__(self, model):
@@ -66,6 +67,9 @@ class GameController(Controller):
     def handle_action(self, game_loop, action, elapsed_time):
         raise NotImplementedError("GameController is an abstract class")
     
+    def set_gameover_state(self, game_loop):
+        game_loop.set_state(state.GameOverState(GameOverInformation()))
+    
     def step(self, game_loop, elapsed_time):
         if(abs(self.model.current_pos.x - self.model.target_pos.x) < 0.01 and
             abs(self.model.current_pos.y - self.model.target_pos.y) < 0.01):
@@ -81,6 +85,7 @@ class GameController(Controller):
                 self.model.current_target += 1
             elif(self.running): # Final target achieved
                 self.model.end_game()
+                self.set_gameover_state(game_loop)
         else:
             self.move_toward_target()
     
@@ -144,6 +149,7 @@ class HumanGameController(GameController):
         if self.model.gameover:
             if action == Action.ENTER:
                 exit(0)
+        
     
 class AIGameController(GameController):
     def __init__(self, model, algorithm='bfs', max_depth=15):
@@ -156,6 +162,7 @@ class AIGameController(GameController):
             'greedy': self.solver.greedy_search
         }
         self.algorithm = algorithms[algorithm]
+        self.algorithm_name = algorithm
         self.max_depth = max_depth
     
     def handle_action(self, game_loop, action, elapsed_time):
@@ -163,9 +170,22 @@ class AIGameController(GameController):
             if action == Action.ENTER:
                 solution = self.algorithm(self.max_depth)
                 last_state = solution[0][-1]
+                self.visited_nodes = solution[1]
                 self.model.set_instructions(last_state.get_instructions())
                 self.calculate_path()
                 self.running = True
         if self.model.gameover:
             if action == Action.ENTER:
                 exit(0)
+    
+    def set_gameover_state(self, game_loop):
+        game_loop.set_state(state.GameOverState(GameOverInformation(self.algorithm_name, self.visited_nodes)))
+
+
+class GameOverController(Controller):
+    def handle_action(self, game_loop, action, elapsed_time):
+        if action == Action.ENTER:
+            exit(0)
+    
+    def step(self, game_loop, elapsed_time):
+        pass

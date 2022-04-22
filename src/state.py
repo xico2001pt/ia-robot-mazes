@@ -1,6 +1,6 @@
 from model import MainMenu, Option
-from controller import HumanGameController, AIGameController, MainMenuController
-from viewer import GameViewer, MainMenuViewer
+from controller import HumanGameController, AIGameController, MainMenuController, GameOverController
+from viewer import GameOverViewer, GameViewer, MainMenuViewer
 
 class State:
     def __init__(self, model, controller, viewer):
@@ -48,6 +48,10 @@ class HumanGameState(GameState):
 class AIGameState(GameState):
     def __init__(self, model, algorithm):
         super().__init__(model, AIGameController(model, algorithm))
+
+class GameOverState(State):
+    def __init__(self, model):
+        super().__init__(model, GameOverController(model), GameOverViewer(model))
 
 if __name__ == "__main__":
     test = MainMenuState()

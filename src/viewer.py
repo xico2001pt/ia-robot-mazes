@@ -108,7 +108,6 @@ class GameViewer(Viewer):
         self.instructions_viewer = InstructionSequenceViewer(self.model.get_sequence())
         self.path_viewer = PathViewer(self.model.get_path())
         self.character_viewer = CharacterViewer(self.model.current_pos)
-        self.gameover_viewer = GameOverViewer()
     
     def get_size(self):
         maze_size = self.maze_viewer.get_size()
@@ -124,9 +123,6 @@ class GameViewer(Viewer):
         self.maze_viewer.draw(maze_surface)
         self.path_viewer.draw(maze_surface)
         self.character_viewer.draw(maze_surface)
-
-        if(self.model.gameover):
-            self.gameover_viewer.draw(maze_surface)
 
         instructions_surface = PygameSurfaceGUI(*self.instructions_viewer.get_size())
         self.instructions_viewer.draw(instructions_surface)
@@ -179,12 +175,12 @@ class CharacterViewer(Viewer):
         gui.draw_image(consts.ROBOT_IMG, pos, consts.CHARACTER_WIDTH, consts.CHARACTER_WIDTH)
 
 class GameOverViewer(Viewer):
-    def __init__(self):
-        super().__init__(None)
+    def __init__(self, model):
+        super().__init__(model)
     
     def draw(self, gui):
-        pos = Position(0, 0)
-        gui.draw_rectangle(pos, 200, 60, consts.BACKGROUND_COLOR)
-        gui.draw_rectangle(pos, 200, 60, consts.WALL_COLOR, 6)
+        self.draw_background(gui)
         gui.draw_text("Gameover", Position(10,10), consts.WALL_COLOR, consts.BLOCK_WIDTH//2)
+        gui.draw_text(f"Algorithm: {self.model.algorithm}", Position(10,60), consts.WALL_COLOR, consts.BLOCK_WIDTH//2)
+        gui.draw_text(f"Visited: {self.model.visited_nodes}", Position(10,110), consts.WALL_COLOR, consts.BLOCK_WIDTH//2)
         
