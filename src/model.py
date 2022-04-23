@@ -51,7 +51,7 @@ class InstructionSequence:
         self.size = len(self.sequence)
     
     def advance_instruction(self):
-        self.current_instruction = (self.current_instruction+1) % self.size
+        self.current_instruction = (self.current_instruction+1) % len(self.sequence)
 
 class Option:
     def __init__(self, description, value=None):
