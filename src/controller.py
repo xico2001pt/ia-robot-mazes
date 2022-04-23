@@ -171,6 +171,7 @@ class AIGameController(GameController):
                 solution = self.algorithm(self.max_depth)
                 last_state = solution[0][-1]
                 self.visited_nodes = solution[1]
+                print(self.visited_nodes)
                 self.model.set_instructions(last_state.get_instructions())
                 self.calculate_path()
                 self.running = True

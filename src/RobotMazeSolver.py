@@ -1,4 +1,4 @@
-from solver import State, SearchProblemSolver
+from solver import State, SearchProblemSolver, StateWrapper
 
 class RobotMazeState(State):
     def __init__(self, instructions):
@@ -32,6 +32,7 @@ class RobotMazeSolver(SearchProblemSolver):
     def __init__(self, initial_state, maze, heuristic):
         super().__init__(initial_state)
         self.maze = maze
+
         self.heuristic = heuristic
     
     def cost(self, state):
@@ -47,9 +48,9 @@ class RobotMazeSolver(SearchProblemSolver):
 
         return new_states
     
-    def is_final_state(self, state):
-        if state.has_cycle():
-            return False
+    def get_final_position(self, state):
+        #if state.has_cycle(): TODO:
+        #    return False
         visited = set()
         position = self.maze.start_position
         endPosition = self.maze.end_position
@@ -68,12 +69,66 @@ class RobotMazeSolver(SearchProblemSolver):
                     nextPosition = (position[0] + 1, position[1])
                 
                 if position == endPosition:
-                    return True
+                    return position
 
                 # Check if nextPosition is obtainable
                 if self.maze.connected(position, nextPosition):
                     position = nextPosition
-        return position == endPosition
+        return position
+    
+    def search_algorithm(self, max_depth, queue, has_cost, has_heuristic):
+        """Cycles through the states according to the given data structure and operators up to a maximum depth.
+
+        Parameters
+        ----------
+        max_depth : int
+            Maximum depth that the algorithm will reach
+        
+        queue : buffer
+            Data Structure used to cycle through the states. Eg: FIFO, LIFO, ...
+        
+        Return Value
+        ----------
+        ([State], int) : Tuple with the path if a solution is found, or empty list if not, and the cost of the solution.
+        """
+        queue.put(StateWrapper(self.initial_state, 0, None))
+
+        visited_nodes = 1
+        while queue.qsize() > 0:
+            state_wrapper = queue.get()
+
+            # Check for final state
+            if self.is_final_state(state_wrapper.state):
+                #print('cost', next_state_wrapper.cost, 'visited_nodes', visited_nodes)
+                return (SearchProblemSolver.get_path(state_wrapper), visited_nodes)
+
+            visited_nodes += 1
+            depth = state_wrapper.depth
+            depth += 1
+            if depth > max_depth:
+                continue
+
+            next_states = self.operators(state_wrapper.state)
+            filter(lambda state: state != state_wrapper.parent, next_states) # Exludes the previous state
+
+            for next_state in next_states:
+                next_state_wrapper = StateWrapper(next_state, depth, state_wrapper)
+
+                # Update cost
+                cost = self.cost(next_state)
+                next_state_wrapper.cost = cost if has_cost or has_heuristic else depth
+
+                # Update priority
+                next_state_wrapper.priority = cost if has_cost else 1
+                final_position = self.get_final_position(next_state)
+                final_position = final_position if final_position != False else (0,0)
+                next_state_wrapper.priority += self.heuristic(next_state, final_position, self.maze.end_position) if has_heuristic else 0
+
+                queue.put(next_state_wrapper)
+        return ([], visited_nodes)
+
+    def is_final_state(self, state):
+        return self.get_final_position(state) == self.maze.end_position
 
 # Testing
 if __name__ == "__main__":

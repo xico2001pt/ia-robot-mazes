@@ -65,8 +65,10 @@ class LTPHeuristic:
         solution = removeLongestSubstrings(solver.breath_first_search(50)[0][-1].get_turns())
         self.compareValue = len(solution)
     
-    def __call__(self, state):
-        return max(0, self.compareValue - len(state))
+    def __call__(self, state, final_position, end_position):
+        x1, y1 = final_position
+        x2, y2 = end_position
+        return (abs(x2-x1)+abs(y2-y1)) / 10
 
 class DirectionsHeuristic:
     def __init__(self, maze):
