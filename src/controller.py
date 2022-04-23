@@ -46,7 +46,7 @@ class MainMenuController(Controller):
     def get_state_selected(self):
         game_type, maze_path, algorithm = (selection.get_selected_option().get_value() for selection in self.model.get_selections().get_options())
         maze = Maze(maze_path)
-        model = Game(maze)
+        model = Game(maze, path=[])
         if game_type == "human":
             return state.HumanGameState(model)
         elif game_type == "AI":
