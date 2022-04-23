@@ -48,9 +48,9 @@ class MainMenuController(Controller):
         maze = Maze(maze_path)
         model = Game(maze)
         if game_type == "human":
-            return HumanGameState(model)
+            return state.HumanGameState(model)
         elif game_type == "AI":
-            return AIGameState(model, algorithm)
+            return state.AIGameState(model, algorithm)
 
 class GameController(Controller):
     directions = {
@@ -141,7 +141,7 @@ class HumanGameController(GameController):
 
     def handle_action(self, game_loop, action, elapsed_time):
         if not self.running:
-            if action == Action.ENTER:
+            if action == Action.ENTER and len(self.model.sequence.get_sequence()) > 0:
                 self.calculate_path()
                 self.running = True
             elif action in [Action.UP,Action.DOWN,Action.LEFT,Action.RIGHT]:
@@ -150,7 +150,10 @@ class HumanGameController(GameController):
                 self.model.pop_instruction()
         if self.model.gameover:
             if action == Action.ENTER:
-                exit(0)
+                game_loop.set_state(state.MainMenuState())
+        else:
+            if action == Action.ESC:
+                game_loop.set_state(state.MainMenuState())
         
     
 class AIGameController(GameController):
@@ -178,7 +181,10 @@ class AIGameController(GameController):
                 self.running = True
         if self.model.gameover:
             if action == Action.ENTER:
-                exit(0)
+                game_loop.set_state(state.MainMenuState())
+        else:
+            if action == Action.ESC:
+                game_loop.set_state(state.MainMenuState())
     
     def set_gameover_state(self, game_loop):
         game_loop.set_state(state.GameOverState(GameOverInformation(self.algorithm_name, self.visited_nodes)))
@@ -187,7 +193,7 @@ class AIGameController(GameController):
 class GameOverController(Controller):
     def handle_action(self, game_loop, action, elapsed_time):
         if action == Action.ENTER:
-            exit(0)
+            game_loop.set_state(state.MainMenuState())
     
     def step(self, game_loop, elapsed_time):
         pass
