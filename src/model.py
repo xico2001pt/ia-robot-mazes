@@ -135,6 +135,7 @@ class Game:
         self.sequence.pop_instruction()
 
 class GameOverInformation:
-    def __init__(self, algorithm=None, visited_nodes=None):
+    def __init__(self, algorithm=None, visited_nodes=None, time=None):
         self.algorithm = algorithm
         self.visited_nodes = visited_nodes
+        self.time = time

@@ -1,3 +1,4 @@
+from time import time
 from graphics import Action
 from model import GameOverInformation, Position, Game
 from maze import Maze
@@ -173,7 +174,9 @@ class AIGameController(GameController):
     def handle_action(self, game_loop, action, elapsed_time):
         if not self.running:
             if action == Action.ENTER:
+                start_time = time()
                 solution = self.algorithm(self.max_depth)
+                self.time_taken = time() - start_time
                 last_state = solution[0][-1]
                 self.visited_nodes = solution[1]
                 self.model.set_instructions(last_state.get_instructions())
@@ -187,7 +190,7 @@ class AIGameController(GameController):
                 game_loop.set_state(state.MainMenuState())
     
     def set_gameover_state(self, game_loop):
-        game_loop.set_state(state.GameOverState(GameOverInformation(self.algorithm_name, self.visited_nodes)))
+        game_loop.set_state(state.GameOverState(GameOverInformation(self.algorithm_name, self.visited_nodes, self.time_taken)))
 
 
 class GameOverController(Controller):

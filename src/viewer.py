@@ -184,9 +184,22 @@ class GameOverViewer(Viewer):
     
     def draw(self, gui):
         self.draw_background(gui)
-        gui.draw_text("Gameover", Position(10,10), consts.WALL_COLOR, consts.BLOCK_WIDTH//2)
+        width, height = gui.get_width(), gui.get_height()
+
+        gui.draw_rectangle(Position(0,0), width, height, consts.GAMEOVER_BORDER_COLOR, consts.GAMEOVER_BORDER_THICKNESS)
+    
+
+        text_height = 20
+        gui.draw_centered_text("Gameover", Position(width//2, consts.GAMEOVER_BORDER_THICKNESS*4), consts.GAMEOVER_TITLE_COLOR, consts.GAMEOVER_TITLE_SIZE)
+        text_height += consts.GAMEOVER_TITLE_SIZE + 20
         if self.model.algorithm:
-            gui.draw_text(f"Algorithm: {self.model.algorithm}", Position(10,60), consts.WALL_COLOR, consts.BLOCK_WIDTH//2)
+            gui.draw_text(f"Algorithm: {self.model.algorithm}", Position(consts.GAMEOVER_BORDER_THICKNESS*2, text_height), consts.GAMEOVER_INFO_COLOR, consts.GAMEOVER_INFO_SIZE)
+            text_height += int(consts.GAMEOVER_INFO_SIZE * 1.5)
         if self.model.visited_nodes:
-            gui.draw_text(f"Visited: {self.model.visited_nodes}", Position(10,110), consts.WALL_COLOR, consts.BLOCK_WIDTH//2)
-        
+            gui.draw_text(f"Visited: {self.model.visited_nodes}", Position(consts.GAMEOVER_BORDER_THICKNESS*2, text_height), consts.GAMEOVER_INFO_COLOR, consts.GAMEOVER_INFO_SIZE)
+            text_height += int(consts.GAMEOVER_INFO_SIZE * 1.5)
+        if self.model.time:
+            gui.draw_text(f"Time: {self.model.time:.2f} seconds", Position(consts.GAMEOVER_BORDER_THICKNESS*2, text_height), consts.GAMEOVER_INFO_COLOR, consts.GAMEOVER_INFO_SIZE)
+            text_height += int(consts.GAMEOVER_INFO_SIZE * 1.5)
+        text_height += consts.GAMEOVER_INFO_SIZE * 2
+        gui.draw_centered_text("Press ENTER to continue",Position(width//2, text_height), consts.GAMEOVER_INFO_COLOR, consts.GAMEOVER_INFO_SIZE)
