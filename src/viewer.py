@@ -185,6 +185,8 @@ class GameOverViewer(Viewer):
     def draw(self, gui):
         self.draw_background(gui)
         gui.draw_text("Gameover", Position(10,10), consts.WALL_COLOR, consts.BLOCK_WIDTH//2)
-        gui.draw_text(f"Algorithm: {self.model.algorithm}", Position(10,60), consts.WALL_COLOR, consts.BLOCK_WIDTH//2)
-        gui.draw_text(f"Visited: {self.model.visited_nodes}", Position(10,110), consts.WALL_COLOR, consts.BLOCK_WIDTH//2)
+        if self.model.algorithm:
+            gui.draw_text(f"Algorithm: {self.model.algorithm}", Position(10,60), consts.WALL_COLOR, consts.BLOCK_WIDTH//2)
+        if self.model.visited_nodes:
+            gui.draw_text(f"Visited: {self.model.visited_nodes}", Position(10,110), consts.WALL_COLOR, consts.BLOCK_WIDTH//2)
         

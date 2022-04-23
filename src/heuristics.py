@@ -66,7 +66,11 @@ class LTPHeuristic:
         self.compareValue = len(solution)
     
     def __call__(self, state):
-        return max(0, self.compareValue - len(state))
+        import random
+        seed = random.randint(0, 99999)
+        random.seed(seed)
+        print(f"seed:{seed}")
+        return random.randint(0, self.compareValue)
 
 class DirectionsHeuristic:
     def __init__(self, maze):

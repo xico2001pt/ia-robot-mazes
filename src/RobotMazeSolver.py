@@ -80,10 +80,10 @@ if __name__ == "__main__":
     from maze import Maze
     from heuristics import *
 
-    for test in range(20):
-        print(f"Testing maze {test + 1}")
-        maze = Maze(f"../assets/mazes/maze{str(test+1).zfill(2)}.txt")
-        solver = RobotMazeSolver(RobotMazeState([]), maze, LTPHeuristic(maze))
-        solution = solver.A_star_search(15)
-        if len(solution[0][-1]) > maze.minimum_instructions:
-            print(f"Maze: {test + 1} Solution: {solution[0][-1]} visited {solution[1]} states")
+    for test in range(1, 21):
+        maze = Maze(f"../assets/mazes/maze{str(test).zfill(2)}.txt")
+        solver = RobotMazeSolver(RobotMazeState([]), maze, DirectionsHeuristic(maze))
+        solution1 = solver.A_star_search(15)[1]
+        solution2 = solver.breath_first_search(15)[1]
+        if solution1 >= solution2:
+            print(f"Maze: {test} A-Star: {solution1} BFS: {solution2}")

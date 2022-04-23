@@ -34,6 +34,7 @@ class MainMenuState(State):
             Option("A-Star", "astar"),
             Option("Greedy", "greedy")
         ]
+        heuristics = [Option("Directions Heuristic"), Option("Lowest")]
         main_menu = MainMenu(game_types, mazes, algorithms)
         super().__init__(main_menu, MainMenuController(main_menu), MainMenuViewer(main_menu))
 

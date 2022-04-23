@@ -48,10 +48,8 @@ class MainMenuController(Controller):
         maze = Maze(maze_path)
         model = Game(maze)
         if game_type == "human":
-            from state import HumanGameState
             return HumanGameState(model)
         elif game_type == "AI":
-            from state import AIGameState
             return AIGameState(model, algorithm)
 
 class GameController(Controller):
@@ -143,7 +141,7 @@ class HumanGameController(GameController):
 
     def handle_action(self, game_loop, action, elapsed_time):
         if not self.running:
-            if action == Action.ENTER and self.model.sequence.full():
+            if action == Action.ENTER:
                 self.calculate_path()
                 self.running = True
             elif action in [Action.UP,Action.DOWN,Action.LEFT,Action.RIGHT]:

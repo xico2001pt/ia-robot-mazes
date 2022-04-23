@@ -110,6 +110,7 @@ class PygameScreenGUI(PygameGUI):
     def __init__(self, width, height):
         super().__init__(width, height)
         pygame.init()
+        pygame.display.set_caption('Robot Mazes')
         pygame.font.init()
         self.screen = pygame.display.set_mode((width, height))
 
