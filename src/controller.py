@@ -29,8 +29,12 @@ class MainMenuController(Controller):
             game_loop.set_state(self.get_state_selected())
         elif action == Action.DOWN:
             self.model.get_selections().next_option()
+            if self.model.is_human_game_type() and self.model.get_selections().get_selected_index() == len(self.model.get_selections()) - 1:
+                self.model.get_selections().next_option()
         elif action == Action.UP:
             self.model.get_selections().previous_option()
+            if self.model.is_human_game_type() and self.model.get_selections().get_selected_index() == len(self.model.get_selections()) - 1:
+                self.model.get_selections().previous_option()
         elif action == Action.RIGHT:
             self.model.get_selections().get_selected_option().next_option()
         elif action == Action.LEFT:

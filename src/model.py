@@ -85,7 +85,10 @@ class Selection:
         self.selected = (self.selected + 1) % len(self.options)
 
     def get_options(self):
-        return self.options.values()
+        return list(self.options.values())
+    
+    def __len__(self):
+        return len(self.options)
 
 class MainMenu:
     def __init__(self, game_states, mazes, algorithms):
@@ -93,6 +96,9 @@ class MainMenu:
     
     def get_selections(self):
         return self.selections
+    
+    def is_human_game_type(self):
+        return self.selections.get_options()[0].get_selected_option().get_value() == "human"
 
 class Game:
     def __init__(self, maze, path=[]):

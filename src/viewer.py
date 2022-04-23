@@ -32,6 +32,8 @@ class MainMenuViewer(Viewer):
         selections = self.model.get_selections()
         options = selections.get_options()
         x, y = gui.get_width()/2, gui.get_height()/2 - (spacing * len(options) - consts.MENU_SELECTION_SPACING)/2
+        if self.model.is_human_game_type():
+            del options[-1]
 
         for idx, selection in enumerate(options):
             color = consts.SELECTED_SELECTION_COLOR if selections.get_selected_index() == idx else consts.UNSELECTED_SELECTION_COLOR
