@@ -29,10 +29,9 @@ class RobotMazeState(State):
         return len(self.instructions)
 
 class RobotMazeSolver(SearchProblemSolver):
-    def __init__(self, initial_state, maze, heuristic):
+    def __init__(self, initial_state, maze):
         super().__init__(initial_state)
         self.maze = maze
-        self.heuristic = heuristic
     
     def cost(self, state):
         return len(state)

@@ -28,14 +28,20 @@ class MainMenuController(Controller):
     def handle_action(self, game_loop, action, elapsed_time):
         if action == Action.ENTER:
             game_loop.set_state(self.get_state_selected())
-        elif action == Action.DOWN:
-            self.model.next_selection()
-            if self.model.get_selected_selection() == "algorithm" and self.model.get_selected_options()["state"] == "human":
-                self.model.next_selection()
-        elif action == Action.UP:
-            self.model.previous_selection()
-            if self.model.get_selected_selection() == "algorithm" and self.model.get_selected_options()["state"] == "human":
-                self.model.next_selection()
+        elif action == Action.DOWN or action == Action.UP:
+            handler = self.model.next_selection if action == Action.DOWN else self.model.previous_selection
+            handler()
+            options_selected = self.model.get_selected_options()
+            if options_selected["state"] == "human":
+                if self.model.get_selected_selection() == "algorithm":
+                    handler()
+                if self.model.get_selected_selection() == "heuristic":
+                    handler()
+            elif options_selected["state"] == "AI":
+                if self.model.get_selected_selection() == "heuristic":
+                    algorithm_selected = options_selected["algorithm"]
+                    if not (algorithm_selected == "greedy" or algorithm_selected == "astar"):
+                        handler()
         elif action == Action.RIGHT:
             self.model.next_option()
         elif action == Action.LEFT:
@@ -50,7 +56,7 @@ class MainMenuController(Controller):
         if options_selected["state"] == "human":
             return state.HumanGameState(model)
         elif options_selected["state"] == "AI":
-            return state.AIGameState(model, options_selected["algorithm"].get_value())
+            return state.AIGameState(model, options_selected["algorithm"].get_value(), options_selected["heuristic"].get_value())
         
 
 class GameController(Controller):
@@ -65,7 +71,7 @@ class GameController(Controller):
         super().__init__(model)
         self.speed = 0.05
         self.running = False
-        self.solver = RobotMazeSolver(RobotMazeState([]), self.model.get_maze(), LTPHeuristic(self.model.get_maze()))
+        self.solver = RobotMazeSolver(RobotMazeState([]), self.model.get_maze())
 
     def handle_action(self, game_loop, action, elapsed_time):
         raise NotImplementedError("GameController is an abstract class")
@@ -158,7 +164,7 @@ class HumanGameController(GameController):
         
     
 class AIGameController(GameController):
-    def __init__(self, model, algorithm='bfs', max_depth=15):
+    def __init__(self, model, algorithm='bfs', heuristic='direction', max_depth=15):
         super().__init__(model)
         algorithms = {
             'bfs': self.solver.breath_first_search,
@@ -167,7 +173,12 @@ class AIGameController(GameController):
             'astar': self.solver.A_star_search,
             'greedy': self.solver.greedy_search
         }
+        heuristics = {
+            'direction': DirectionsHeuristic,
+            'ltp': LTPHeuristic
+        }
         self.algorithm = algorithms[algorithm]
+        self.solver.heuristic = heuristics[heuristic](self.model.get_maze())
         self.algorithm_name = algorithm
         self.max_depth = max_depth
     

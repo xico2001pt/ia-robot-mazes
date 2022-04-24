@@ -94,12 +94,12 @@ class Selection:
         return len(self.options)
 
 class MainMenu:
-    def __init__(self, game_states, mazes, algorithms, heuristics=None):
+    def __init__(self, game_states, mazes, algorithms, heuristics):
         self.selections = Selection([
             Option("state", Selection(game_states)),
             Option("maze", Selection(mazes)),
             Option("algorithm", Selection(algorithms)),
-            #Option("heuristic", Selection(heuristics))
+            Option("heuristic", Selection(heuristics))
         ])
     
     def next_selection(self):

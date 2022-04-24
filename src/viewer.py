@@ -32,6 +32,11 @@ class MainMenuViewer(Viewer):
         options_selected = self.model.get_selected_options()
         if options_selected["state"] == "human":
             options_selected.pop("algorithm")
+            options_selected.pop("heuristic")
+        elif options_selected["state"] == "AI":
+            algorithm_selected = options_selected["algorithm"]
+            if not (algorithm_selected == "greedy" or algorithm_selected == "astar"):
+                options_selected.pop("heuristic")
         
         spacing = consts.MENU_SELECTION_SIZE + consts.MENU_SELECTION_SPACING
         x, y = gui.get_width()/2, gui.get_height()/2 - (spacing * len(options_selected) - consts.MENU_SELECTION_SPACING)/2

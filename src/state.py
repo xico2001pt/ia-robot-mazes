@@ -34,8 +34,11 @@ class MainMenuState(State):
             Option("A-Star", "astar"),
             Option("Greedy", "greedy")
         ]
-        heuristics = [Option("Directions Heuristic"), Option("Lowest")]
-        main_menu = MainMenu(game_types, mazes, algorithms)
+        heuristics = [
+            Option("Directions Heuristic", "direction"),
+            Option("LTP Heuristic", "ltp")
+        ]
+        main_menu = MainMenu(game_types, mazes, algorithms, heuristics)
         super().__init__(main_menu, MainMenuController(main_menu), MainMenuViewer(main_menu))
 
 class GameState(State):
@@ -47,8 +50,8 @@ class HumanGameState(GameState):
         super().__init__(model, HumanGameController(model))
 
 class AIGameState(GameState):
-    def __init__(self, model, algorithm):
-        super().__init__(model, AIGameController(model, algorithm))
+    def __init__(self, model, algorithm, heuristic):
+        super().__init__(model, AIGameController(model, algorithm, heuristic))
 
 class GameOverState(State):
     def __init__(self, model):
