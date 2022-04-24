@@ -10,6 +10,7 @@ class Action:
     DOWN = 5
     LEFT = 6
     RIGHT = 7
+    HINT = 8
 
 class PygameGUI:
     input_key_map = {
@@ -24,7 +25,8 @@ class PygameGUI:
         pygame.K_a: Action.LEFT,
         pygame.K_RIGHT: Action.RIGHT,
         pygame.K_d: Action.RIGHT,
-        pygame.K_q: Action.QUIT
+        pygame.K_q: Action.QUIT,
+        pygame.K_h: Action.HINT
     }
 
     def __init__(self, width, height):

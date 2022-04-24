@@ -48,7 +48,6 @@ class InstructionSequence:
     
     def set_instructions(self, instructions):
         self.sequence = instructions.copy()
-        self.size = len(self.sequence)
     
     def advance_instruction(self):
         self.current_instruction = (self.current_instruction+1) % len(self.sequence)
@@ -143,7 +142,7 @@ class Game:
         return self.path
     
     def get_sequence(self):
-        return self.sequence
+        return self.sequence    # TODO: Refactor it in controller
     
     def add_instruction(self, instruction):
         self.sequence.add_instruction(instruction)

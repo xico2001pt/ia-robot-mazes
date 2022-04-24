@@ -22,6 +22,9 @@ class SearchProblemSolver:
     def __init__(self, initial_state):
         self.initial_state = initial_state
     
+    def set_initial_state(self, initial_state):
+        self.initial_state = initial_state
+    
     # Methods to be overwritten
     def cost(self, state):
         raise NotImplementedError()
@@ -81,7 +84,7 @@ class SearchProblemSolver:
         visited_nodes = 1
         while queue.qsize() > 0:
             state_wrapper = queue.get()
-            #print(f"{' ' * state_wrapper.depth}{state_wrapper.state.instructions} - {state_wrapper.priority}")
+            #print(f"{' ' * state_wrapper.depth}{state_wrapper.state.instructions} - {state_wrapper.depth}")
 
             # Check for final state
             if self.is_final_state(state_wrapper.state):

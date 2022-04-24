@@ -151,10 +151,20 @@ class HumanGameController(GameController):
             if action == Action.ENTER and len(self.model.sequence.get_sequence()) > 0:
                 self.calculate_path()
                 self.running = True
-            elif action in [Action.UP,Action.DOWN,Action.LEFT,Action.RIGHT]:
+            elif action in [Action.UP, Action.DOWN, Action.LEFT, Action.RIGHT]:
                 self.model.add_instruction(self.actions[action])
             elif action == Action.BACKSPACE:
                 self.model.pop_instruction()
+            elif action == Action.HINT:
+                current_sequence = self.model.sequence.get_sequence()
+                self.solver.set_initial_state(RobotMazeState(current_sequence))
+                solution = self.solver.breath_first_search(self.model.get_maze().get_minimum_intructions() - len(current_sequence))[0]
+                if solution:
+                    self.model.set_instructions(solution[-1].get_instructions()[: len(current_sequence) + 1])
+                else:
+                    self.solver.set_initial_state(RobotMazeState([]))
+                    solution = self.solver.breath_first_search(self.model.get_maze().get_minimum_intructions())[0][-1].get_instructions()
+                    self.model.set_instructions(solution[:1])
         if self.model.gameover:
             if action == Action.ENTER:
                 game_loop.set_state(state.MainMenuState())
