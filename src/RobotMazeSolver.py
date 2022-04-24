@@ -79,11 +79,11 @@ class RobotMazeSolver(SearchProblemSolver):
 if __name__ == "__main__":
     from maze import Maze
     from heuristics import *
-
-    for test in range(1, 21):
+    n_mazes = 20
+    sum_nodes = [0] * 2
+    for test in range(1, n_mazes + 1):
         maze = Maze(f"../assets/mazes/maze{str(test).zfill(2)}.txt")
         solver = RobotMazeSolver(RobotMazeState([]), maze, DirectionsHeuristic(maze))
-        solution1 = solver.A_star_search(15)[1]
-        solution2 = solver.breath_first_search(15)[1]
-        if solution1 >= solution2:
-            print(f"Maze: {test} A-Star: {solution1} BFS: {solution2}")
+        sum_nodes[0] += solver.A_star_search(15)[1]
+        sum_nodes[1] += solver.breath_first_search(15)[1]
+    print(f"AStar = {sum_nodes[0]}\nBFS = {sum_nodes[1]}\nAStar/BFS = {sum_nodes[0] / sum_nodes[1]}")

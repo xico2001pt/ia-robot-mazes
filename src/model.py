@@ -56,14 +56,17 @@ class InstructionSequence:
 class Option:
     def __init__(self, description, value=None):
         self.description = description
-        self.value = value if value != None else description
+        self.value = value or description
 
     def __str__(self):
         return self.description
 
-    def __eq__(self, description):
-        return self.description == description
+    def __eq__(self, value):
+        return self.value == value
     
+    def get_description(self):
+        return self.description
+
     def get_value(self):
         return self.value
 
@@ -91,19 +94,36 @@ class Selection:
         return len(self.options)
 
 class MainMenu:
-    def __init__(self, game_states, mazes, algorithms):
-        self.selections = Selection([Selection(game_states), Selection(mazes), Selection(algorithms)])
+    def __init__(self, game_states, mazes, algorithms, heuristics=None):
+        self.selections = Selection([
+            Option("state", Selection(game_states)),
+            Option("maze", Selection(mazes)),
+            Option("algorithm", Selection(algorithms)),
+            #Option("heuristic", Selection(heuristics))
+        ])
     
-    def get_selections(self):
-        return self.selections
+    def next_selection(self):
+        self.selections.next_option()
     
-    def is_human_game_type(self):
-        return self.selections.get_options()[0].get_selected_option().get_value() == "human"
+    def previous_selection(self):
+        self.selections.previous_option()
+    
+    def next_option(self):
+        self.selections.get_selected_option().get_value().next_option()
+    
+    def previous_option(self):
+        self.selections.get_selected_option().get_value().previous_option()
+    
+    def get_selected_selection(self):
+        return self.selections.get_selected_option().get_description()
+    
+    def get_selected_options(self):
+        return {selection.get_description() : selection.get_value().get_selected_option() for selection in self.selections.get_options()}
 
 class Game:
-    def __init__(self, maze, path=[]):
+    def __init__(self, maze):
         self.maze = maze
-        self.path = path
+        self.path = []
         self.sequence = InstructionSequence(self.maze.minimum_instructions)
         self.current_pos = Position(*maze.get_start_position())
         self.target_pos = Position(self.current_pos.x, self.current_pos.y) #TODO: Copy class is cleaner

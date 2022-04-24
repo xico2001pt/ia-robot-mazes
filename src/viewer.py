@@ -28,22 +28,23 @@ class MainMenuViewer(Viewer):
             gui.draw_text(line, Position(consts.MENU_CREDITS_PADDING, gui.get_height()-(len(lines)-idx)*consts.MENU_CREDITS_SIZE-consts.MENU_CREDITS_PADDING), consts.MENU_CREDITS_COLOR, consts.MENU_CREDITS_SIZE)
     
     def draw_selections(self, gui):
+        selected_selection = self.model.get_selected_selection()
+        options_selected = self.model.get_selected_options()
+        if options_selected["state"] == "human":
+            options_selected.pop("algorithm")
+        
         spacing = consts.MENU_SELECTION_SIZE + consts.MENU_SELECTION_SPACING
-        selections = self.model.get_selections()
-        options = selections.get_options()
-        x, y = gui.get_width()/2, gui.get_height()/2 - (spacing * len(options) - consts.MENU_SELECTION_SPACING)/2
-        if self.model.is_human_game_type():
-            del options[-1]
+        x, y = gui.get_width()/2, gui.get_height()/2 - (spacing * len(options_selected) - consts.MENU_SELECTION_SPACING)/2
 
-        for idx, selection in enumerate(options):
-            color = consts.SELECTED_SELECTION_COLOR if selections.get_selected_index() == idx else consts.UNSELECTED_SELECTION_COLOR
-            self.draw_selection(gui, selection, Position(x, y), color)
+        for selection, option in options_selected.items():
+            color = consts.SELECTED_SELECTION_COLOR if selection == selected_selection else consts.UNSELECTED_SELECTION_COLOR
+            self.draw_selection(gui, option, Position(x, y), color)
             y += spacing
         
         gui.draw_centered_text("Press ENTER to start", Position(x, y), consts.MENU_ENTER_COLOR, int(consts.MENU_SELECTION_SIZE*0.75))
 
-    def draw_selection(self, gui, selection, position, color):
-        gui.draw_centered_text("◄ " + str(selection.get_selected_option()) + " ►", position, color, consts.MENU_SELECTION_SIZE)
+    def draw_selection(self, gui, option, position, color):
+        gui.draw_centered_text("◄ " + str(option) + " ►", position, color, consts.MENU_SELECTION_SIZE)
 
 class MazeViewer(Viewer):
     def __init__(self, model):

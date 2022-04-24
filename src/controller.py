@@ -29,29 +29,29 @@ class MainMenuController(Controller):
         if action == Action.ENTER:
             game_loop.set_state(self.get_state_selected())
         elif action == Action.DOWN:
-            self.model.get_selections().next_option()
-            if self.model.is_human_game_type() and self.model.get_selections().get_selected_index() == len(self.model.get_selections()) - 1:
-                self.model.get_selections().next_option()
+            self.model.next_selection()
+            if self.model.get_selected_selection() == "algorithm" and self.model.get_selected_options()["state"] == "human":
+                self.model.next_selection()
         elif action == Action.UP:
-            self.model.get_selections().previous_option()
-            if self.model.is_human_game_type() and self.model.get_selections().get_selected_index() == len(self.model.get_selections()) - 1:
-                self.model.get_selections().previous_option()
+            self.model.previous_selection()
+            if self.model.get_selected_selection() == "algorithm" and self.model.get_selected_options()["state"] == "human":
+                self.model.next_selection()
         elif action == Action.RIGHT:
-            self.model.get_selections().get_selected_option().next_option()
+            self.model.next_option()
         elif action == Action.LEFT:
-            self.model.get_selections().get_selected_option().previous_option()
+            self.model.previous_option()
     
     def step(self, game_loop, elapsed_time):
         pass
 
     def get_state_selected(self):
-        game_type, maze_path, algorithm = (selection.get_selected_option().get_value() for selection in self.model.get_selections().get_options())
-        maze = Maze(maze_path)
-        model = Game(maze, path=[])
-        if game_type == "human":
+        options_selected = self.model.get_selected_options()
+        model = Game(Maze(options_selected["maze"].get_value()))
+        if options_selected["state"] == "human":
             return state.HumanGameState(model)
-        elif game_type == "AI":
-            return state.AIGameState(model, algorithm)
+        elif options_selected["state"] == "AI":
+            return state.AIGameState(model, options_selected["algorithm"].get_value())
+        
 
 class GameController(Controller):
     directions = {
