@@ -33,9 +33,8 @@ class MainMenuController(Controller):
             handler()
             options_selected = self.model.get_selected_options()
             if options_selected["state"] == "human":
-                if self.model.get_selected_selection() == "algorithm":
-                    handler()
-                if self.model.get_selected_selection() == "heuristic":
+                skip = ["algorithm", "heuristic"]
+                while any(option == self.model.get_selected_selection() for option in skip):
                     handler()
             elif options_selected["state"] == "AI":
                 if self.model.get_selected_selection() == "heuristic":

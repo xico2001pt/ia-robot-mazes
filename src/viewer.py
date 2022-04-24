@@ -49,7 +49,7 @@ class MainMenuViewer(Viewer):
         gui.draw_centered_text("Press ENTER to start", Position(x, y), consts.MENU_ENTER_COLOR, int(consts.MENU_SELECTION_SIZE*0.75))
         if options_selected["state"] == "human":
             y += spacing * 2 / 3
-            gui.draw_centered_text("Press H for a hint", Position(x, y), consts.MENU_ENTER_COLOR, int(consts.MENU_SELECTION_SIZE*0.75))
+            gui.draw_centered_text("In game press H for a hint", Position(x, y), consts.MENU_ENTER_COLOR, int(consts.MENU_SELECTION_SIZE*0.75))
 
     def draw_selection(self, gui, option, position, color):
         gui.draw_centered_text("◄ " + str(option) + " ►", position, color, consts.MENU_SELECTION_SIZE)
