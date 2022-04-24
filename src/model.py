@@ -21,8 +21,8 @@ class Position:
     # TODO: __eq__()
     
 class InstructionSequence:
-    def __init__(self, size, sequence=[]):
-        self.sequence = sequence
+    def __init__(self, size):
+        self.sequence = []
         self.size = size
         self.current_instruction = -2
     
