@@ -6,15 +6,15 @@ class Viewer:
     def __init__(self, model):
         self.model = model    
 
-    def draw_background(self, gui):
-        gui.fill_screen(consts.BACKGROUND_COLOR)
+    def draw_background(self, color, gui):
+        gui.fill_screen(color)
     
     def draw(self, gui):
         raise NotImplementedError()
 
 class MainMenuViewer(Viewer):
     def draw(self, gui):
-        self.draw_background(gui)
+        self.draw_background(consts.BACKGROUND_COLOR, gui)
         self.draw_title(gui)
         self.draw_credits(gui)
         self.draw_selections(gui)
@@ -57,9 +57,6 @@ class MainMenuViewer(Viewer):
 class MazeViewer(Viewer):
     def __init__(self, model):
         super().__init__(model)
-
-    def get_model(self): # TODO: IS IT NECESSARY?
-        return self.model
 
     def get_size(self):
         size = self.model.get_size()
@@ -129,8 +126,7 @@ class GameViewer(Viewer):
             maze_size[1]+instruction_size[1]+self.OFFSET_Y*3)
 
     def draw(self, gui):
-        size = self.get_size()
-        gui.draw_rectangle(Position(0, 0), size[0], size[1], (255,255,255), thickness=0)
+        self.draw_background(consts.WHITE, gui)
 
         maze_surface = PygameSurfaceGUI(*self.maze_viewer.get_size())
         self.maze_viewer.draw(maze_surface)
@@ -192,7 +188,7 @@ class GameOverViewer(Viewer):
         super().__init__(model)
     
     def draw(self, gui):
-        self.draw_background(gui)
+        self.draw_background(consts.BACKGROUND_COLOR, gui)
         width, height = gui.get_width(), gui.get_height()
 
         gui.draw_rectangle(Position(0,0), width, height, consts.GAMEOVER_BORDER_COLOR, consts.GAMEOVER_BORDER_THICKNESS)
