@@ -56,7 +56,6 @@ class LTPSolver(SearchProblemSolver):
     def is_final_state(self, state):
         return (state.x, state.y) == self.maze.get_end_position()
 
-# TODO: Could be extended from an interface
 class LTPHeuristic:
     def __init__(self, maze):
         self.maze = maze

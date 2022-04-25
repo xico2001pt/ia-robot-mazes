@@ -18,7 +18,8 @@ class Position:
     def get_right(self):
         return Position(self.x + 1, self.y)
     
-    # TODO: __eq__()
+    def copy(self):
+        return Position(self.x, self.y)
     
 class InstructionSequence:
     def __init__(self, size):
@@ -125,7 +126,7 @@ class Game:
         self.path = []
         self.sequence = InstructionSequence(self.maze.minimum_instructions)
         self.current_pos = Position(*maze.get_start_position())
-        self.target_pos = Position(self.current_pos.x, self.current_pos.y) #TODO: Copy class is cleaner
+        self.target_pos = self.current_pos.copy()
         self.current_target = 0
         self.gameover = False
 
@@ -142,7 +143,7 @@ class Game:
         return self.path
     
     def get_sequence(self):
-        return self.sequence    # TODO: Refactor it in controller
+        return self.sequence
     
     def add_instruction(self, instruction):
         self.sequence.add_instruction(instruction)

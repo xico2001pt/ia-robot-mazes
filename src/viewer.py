@@ -74,7 +74,6 @@ class MazeViewer(Viewer):
         self.draw_walls(lines, gui)
         self.draw_start_and_end(gui)
     
-    # TODO: Refactor code so it looks cleaner
     def get_line_between_neighbours(self, pos, neighbour_pos):
         delta_x, delta_y = neighbour_pos[0] - pos[0], neighbour_pos[1] - pos[1]
         if(delta_x == 0):
