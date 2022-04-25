@@ -80,14 +80,13 @@ if __name__ == "__main__":
     from heuristics import *
     n_mazes = 20
     with open("../docs/results.md", "w") as f:
-        f.write("| Maze | DFS | IDS | BFS | Uniform | Greedy | A* |\n")
-        f.write("| --- " * 7 + "|\n")
+        f.write("| Maze | DFS | IDS | BFS | Uniform | Greedy (Directions Heuristic) | Greedy (LTP Heuristic) | A* (Directions Heuristic) | A* (LTP Heuristic) |\n")
+        f.write("| --- " * 9 + "|\n")
         for test in range(1, n_mazes + 1):
             maze_name = f"maze{str(test).zfill(2)}"
             f.write(f"| {maze_name} |")
             maze = Maze(f"../assets/mazes/{maze_name}.txt")
             solver = RobotMazeSolver(RobotMazeState([]), maze)
-            solver.heuristic = DirectionsHeuristic(maze)
             algorithms = [
                 solver.depth_first_search,
                 solver.iterative_deepening_search,
@@ -96,8 +95,18 @@ if __name__ == "__main__":
                 solver.greedy_search,
                 solver.A_star_search
             ]
+            heuristics = [
+                DirectionsHeuristic(maze),
+                LTPHeuristic(maze)
+            ]
             print(f"> Testing {maze_name}")
-            for i, algorithm in enumerate(algorithms):
-                print(f" - Running {algorithm.__name__}")
-                f.write(f" {algorithm(15)[1]} |")
+            for algorithm in algorithms:
+                if not (algorithm.__name__ == "greedy_search" or algorithm.__name__ == "A_star_search"):
+                    print(f" - Running {algorithm.__name__}")
+                    f.write(f" {algorithm(15)[1]} |")
+                else:
+                    for n, heuristic in enumerate(heuristics):
+                        solver.heuristic = heuristic
+                        print(f" - Running {algorithm.__name__} with Heuristic {n + 1}")
+                        f.write(f" {algorithm(15)[1]} |")
             f.write("\n")
