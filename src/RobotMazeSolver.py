@@ -79,10 +79,25 @@ if __name__ == "__main__":
     from maze import Maze
     from heuristics import *
     n_mazes = 20
-    sum_nodes = [0] * 2
-    for test in range(1, n_mazes + 1):
-        maze = Maze(f"../assets/mazes/maze{str(test).zfill(2)}.txt")
-        solver = RobotMazeSolver(RobotMazeState([]), maze, DirectionsHeuristic(maze))
-        sum_nodes[0] += solver.A_star_search(15)[1]
-        sum_nodes[1] += solver.breath_first_search(15)[1]
-    print(f"AStar = {sum_nodes[0]}\nBFS = {sum_nodes[1]}\nAStar/BFS = {sum_nodes[0] / sum_nodes[1]}")
+    with open("../docs/results.md", "w") as f:
+        f.write("| Maze | DFS | IDS | BFS | Uniform | Greedy | A* |\n")
+        f.write("| --- " * 7 + "|\n")
+        for test in range(1, n_mazes + 1):
+            maze_name = f"maze{str(test).zfill(2)}"
+            f.write(f"| {maze_name} |")
+            maze = Maze(f"../assets/mazes/{maze_name}.txt")
+            solver = RobotMazeSolver(RobotMazeState([]), maze)
+            solver.heuristic = DirectionsHeuristic(maze)
+            algorithms = [
+                solver.depth_first_search,
+                solver.iterative_deepening_search,
+                solver.breath_first_search,
+                solver.uniform_cost_search,
+                solver.greedy_search,
+                solver.A_star_search
+            ]
+            print(f"> Testing {maze_name}")
+            for i, algorithm in enumerate(algorithms):
+                print(f" - Running {algorithm.__name__}")
+                f.write(f" {algorithm(15)[1]} |")
+            f.write("\n")
